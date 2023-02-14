@@ -1,0 +1,17 @@
+Caesar cypher is a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet.
+
+In the main.py file, theres a call for a function defined in the caesar.py module -> run_caesar_cipher.
+This program asks for inputs from the user:
+  - direction (can be either encode or decode)
+  - message (must be at least one character long)
+  - shift (must be an integer)
+
+The inputs are passed down to another function -> caesar_cipher
+
+Inside that function, once all inputs are validated, either the encode or decode is applied to the text provided by the user, depending on the 'direction' passed as argument to the function.
+To encode a text, the shift is applied to move forward in the alphabet's list.
+To decode a text, the shift is applied to move backwards in the alphabet's list.
+This function will either return error messages, if any of the inputs fail validation, or the encoder/decoded text.
+If the user encodes a message with a given shift, the resulting encoded message can be decoded when using the same shift.
+
+The goal of this project was to practice defining and calling functions with parameters using pythin syntax.
