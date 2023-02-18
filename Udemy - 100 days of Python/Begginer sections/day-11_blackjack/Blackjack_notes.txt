@@ -1,0 +1,36 @@
+This program runs a Blackjack game, and it was implemented as part of the challenge proposed in day 11 the course 100 days of Python 
+
+*** Rules:
+
+ 1. Blackjack hands are scored by their point total. The hand with the highest total wins as long as it doesn't exceed 21; a hand with a higher total than 21 is said to bust.
+ 2. Cards 2 through 10 are worth their face value, and face cards (jack, queen, king) are also worth 10. An ace's value is 11 unless this would cause the player to bust, in which case it is worth 1.
+ 3. The goal of the player is to beat the dealer by having the higher, unbusted hand.
+ 4. If the player busts he loses, even if the dealer also busts.
+
+-----------------------------------------------------
+
+***  Gameplay:
+
+ 1. When game starts, Player gets to see the two cards that were randomly drawn plus the score for that hand, and one of the cards that were drawn to Dealer.
+ 2. Player is prompted to decide wheter they want to draw another card or not.
+ 3. If Player decides to draw another card, the updated hand and score are displayed.
+ 4. Steps 2-3 can be repeated over and over, as long as the Player's score doesn't exceed 21. In that case, Player busts and loses.
+ 5. If player decides to pass (not draw another card), the game displays the summary of both hands, with the respective cards and scores, and the result of that match.
+ 6. When a match ends, Player is asked if they want to start another game.
+ 7. If player wants to play again, a new whole game begins from step 1. If not, the app exits.
+
+-----------------------------------------------------
+
+***  Premises about this implementation:
+
+ 1. The current implementation works with an unlimited deck, and cards are not removed from the deck as they are drawn.
+ 2. The Dealer keep drawing cards as long as it has a score less than 17.
+ 3. "Yes" for both "draw another card" and "start another game" must be explicitly 'y'. Any other inputs will be considered a "No".
+
+-----------------------------------------------------
+
+**  Key difference from implementation discussed in the course:
+
+The solution discussed in the course implemented the deck of cards as an array containing only their face values (cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]).
+
+This implementation worked with a dictionary, having the cards representations as keys and their face values as values. By doing this, it was possible to display the cards J, Q, K and A properly. It also required some reseach about working with tuples.
