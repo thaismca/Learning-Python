@@ -50,4 +50,9 @@ def sum_hand(hand):
     # return total
     return hand_total
 
+def is_blackjack(hand):
+    '''It receives a hand and returns true if it has a blackjack and false if not'''
+    return sum_hand(hand) == 21 and len(hand) == 2
+
+
 # note: next iteration will involve implementing this as a class

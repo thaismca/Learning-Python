@@ -1,5 +1,5 @@
 #import funcions from deck.py
-from deck import draw_cards, show_cards, sum_hand
+from deck import draw_cards, show_cards, sum_hand, is_blackjack
 # import logo from art
 from art import blackjack_logo
 
@@ -46,8 +46,14 @@ def start_game():
             print(f"\n\t-> Your cards: {show_cards(hand_player)}, score: {sum_hand(hand_player)}")
             print(f"\n\t-> Dealer's cards: {show_cards(hand_dealer)}, score: {sum_hand(hand_dealer)}")
 
+            # player has blackjack and dealer not -> player wins
+            if is_blackjack(hand_player) and not is_blackjack(hand_dealer):
+                print("\n\t::: BLACKJACK!!! YOU WIN! :::")
+            # dealer has blackjack and player not -> player wins
+            elif is_blackjack(hand_dealer) and not is_blackjack(hand_player):
+                print("\n\t::: DEALER'S BLACKJACK!!! YOU LOSE :::")
             # player with greater hand or dealer bust -> player win
-            if sum_hand(hand_player) > sum_hand(hand_dealer) or sum_hand(hand_dealer) > 21:
+            elif sum_hand(hand_player) > sum_hand(hand_dealer) or sum_hand(hand_dealer) > 21:
                 print("\n\t::: YOU WIN! :::")
             # dealer with greater hand -> player lose
             elif sum_hand(hand_player) < sum_hand(hand_dealer):
