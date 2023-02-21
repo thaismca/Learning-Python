@@ -53,6 +53,7 @@ If there are not enough resources to make any drink, a notification is displayed
 
 -> DIFFERENCES FROM IMPLEMENTATION DISPLAYED IN THE COURSE
 
+
 - Show menu: the implementation displayed in the course has a hard coded menu (espresso, latte, cappuccino). Only after the user selects an item and there's no sufficient resources to make that drink, it displays a message saying that the drink cannot be made due to the lack of resources. This implementation has a dinamic menu that consumes data from the machine_config file, and displays only the items that can be made with the current amount of resources available.
 
 - Receive money: the implementation displayed in the course receives the amount of each coin only one. If user doesn't add enough coins in one try, the order is automatically cancelled and the money is refunded. This implementation allows the user to add more coins until the cost is covered, or the user has the option to cancel and get the refund.
