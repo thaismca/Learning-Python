@@ -27,20 +27,17 @@ menu = {
 resources = {
     "water": {
         "unit": "mL",
-        "quantity": 3000,
+        "quantity": 1400,
         "min": 500,
-        "max": 3000
     },
     "milk": {
         "unit": "mL",
-        "quantity": 2000,
+        "quantity": 1000,
         "min": 300,
-        "max": 2000
     },
     "coffee": {
         "unit": "mg",
-        "quantity": 100,
+        "quantity": 150,
         "min": 50,
-        "max": 1000
     }
 }
