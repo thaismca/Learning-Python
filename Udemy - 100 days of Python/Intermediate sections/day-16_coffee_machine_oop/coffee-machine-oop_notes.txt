@@ -1,0 +1,7 @@
+This coffee machine oop project was implemented as part of the day 16 of the course
+It takes the same project implemented in day 15 and reimplements it using opp
+-------------------------------------------------------------------------------------
+
+The idea of the course in this projects was to provide the classes and challenge students to make use of those classes to reimplement the coffee machine project from day 15 using oop paradigm, without making any changes to the classes provided (as if we were using some sort of package). 
+
+As per notes from the day 15 project, my implementation was different from the solution provided in the course, as part of my personal challenge to add more features to whatever project developed throughout this course. That being said, this one implementation will also be different, and I'll be making changes to the classes that were provided.
