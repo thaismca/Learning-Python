@@ -20,15 +20,14 @@ class Menu:
         ]
 
     def get_items(self):
-        """Returns all the names of the available menu items"""
-        options = ""
+        """Returns all items available in the menu"""
+        items = []
         for item in self.menu:
-            options += f"{item.name}/"
-        return options
+            items.append(vars(item))
+        return items
 
     def find_drink(self, order_name):
         """Searches the menu for a particular drink by name. Returns that item if it exists, otherwise returns None"""
         for item in self.menu:
             if item.name == order_name:
-                return item
-        print("Sorry that item is not available.")
+                return vars(item)
