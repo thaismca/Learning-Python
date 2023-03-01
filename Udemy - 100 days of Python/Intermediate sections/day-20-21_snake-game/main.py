@@ -41,6 +41,8 @@ while game_is_on:
         food.refresh_position()
         # update score
         scoreboard.increase_score()
+        # extend snake -> add a segment after the current last one
+        snake.extend()
 
     # detect collision with wall by checking if snake's head reaches a certain x or y cordinate right at the edge of the screen
     x_boundary = SCREEN_WIDTH/2
@@ -48,7 +50,6 @@ while game_is_on:
     # checking for collision in the four directions
     if snake.head.xcor() >= x_boundary or snake.head.xcor() <= -x_boundary or snake.head.ycor() >= y_boundary or snake.head.ycor() <= -y_boundary:
         game_is_on = False
-        print(snake.head.pos())
 
 scoreboard.game_over()
 

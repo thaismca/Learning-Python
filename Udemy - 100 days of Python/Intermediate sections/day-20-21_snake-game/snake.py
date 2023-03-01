@@ -22,13 +22,24 @@ class Snake():
     def createSnake(self):
         '''Generates the first three segments of a Snake'''
         for pos in STARTING_POS:
-            new_segment = Turtle()
-            new_segment. shape('square')
-            new_segment.color('white')
-            new_segment.penup()
-            new_segment.goto(pos)
-            self.segments.append(new_segment)
+            self.add_segment(pos)
           
+    
+    def add_segment(self, position):
+        """Adds a new segment to the given position"""
+        new_segment = Turtle()
+        new_segment. shape('square')
+        new_segment.color('white')
+        new_segment.penup()
+        new_segment.goto(position)
+        self.segments.append(new_segment)
+
+
+    def extend(self):
+        """Adds a new segment after the current last one"""
+        last_seg_position = self.segments[-1].pos()
+        self.add_segment(last_seg_position)
+
     
     def move(self):
         '''Moves the snake constantly forward at a given pace'''
