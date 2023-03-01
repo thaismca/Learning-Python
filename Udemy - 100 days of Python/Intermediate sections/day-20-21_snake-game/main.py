@@ -6,7 +6,7 @@ import time
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 # speed reccommended to be between 1 and 10
-SPEED = 5
+SPEED = 10
 
 
 #screen setup
@@ -22,6 +22,10 @@ snake = Snake()
 # game flag
 game_is_on = True
 screen.listen()
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.right, "Right")
 
 # game loop
 while game_is_on:
