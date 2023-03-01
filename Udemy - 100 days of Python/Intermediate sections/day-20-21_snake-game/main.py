@@ -1,4 +1,5 @@
 from snake import Snake
+from food import Food
 from turtle import Turtle, Screen
 import time
 
@@ -18,6 +19,8 @@ screen.tracer(0)
 
 # create a snake
 snake = Snake()
+# create food instance
+food = Food()
 
 # game flag
 game_is_on = True
