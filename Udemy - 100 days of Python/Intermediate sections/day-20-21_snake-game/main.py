@@ -51,6 +51,13 @@ while game_is_on:
     if snake.head.xcor() >= x_boundary or snake.head.xcor() <= -x_boundary or snake.head.ycor() >= y_boundary or snake.head.ycor() <= -y_boundary:
         game_is_on = False
 
+    # detect collision between the snake's head and any other segment by checking
+    # if the distance between head and any of the segments that represent the rest of the snake's body is less than half of a segment (10)
+    for segment in snake.segments[2:]:
+        if snake.head.distance(segment) < 10:
+            game_is_on = False
+
+
 scoreboard.game_over()
 
 
