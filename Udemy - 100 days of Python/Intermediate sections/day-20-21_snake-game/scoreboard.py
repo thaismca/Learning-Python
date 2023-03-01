@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT
 # Scoreboard settings
 TEXT_ALIGN = "center"
 FONT_SIZE = 12
-FONT = ("Arial", FONT_SIZE, "bold")
+FONT = ("Courier", FONT_SIZE, "bold")
 
 class Scoreboard(Turtle):
     """Models the scoreboard in the Snake Game. It inherities from the Turtle class"""
@@ -29,3 +29,8 @@ class Scoreboard(Turtle):
         self.score += 1
         self.clear()
         self.render_score()
+
+    def game_over(self):
+        """Renders game over text at the center of the screen"""
+        self.goto(0,0)
+        self.write(f"GAME OVER", align=TEXT_ALIGN, font=FONT)
