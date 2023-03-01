@@ -14,6 +14,8 @@ screen.bgcolor('black')
 screen.title('Snake Game')
 screen.tracer(0)
 
+# create game scoreboard
+scoreboard = Scoreboard()
 # create a snake
 snake = Snake()
 # create food instance
@@ -37,6 +39,8 @@ while game_is_on:
     if snake.head.distance(food) < 15:
         # move food to new position
         food.refresh_position()
+        # update score
+        scoreboard.increase_score()
 
 
 
