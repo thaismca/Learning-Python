@@ -1,14 +1,11 @@
 from snake import Snake
 from food import Food
-from turtle import Turtle, Screen
+from scoreboard import Scoreboard
+from turtle import Screen
 import time
 
-# SETTINGS
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
-# speed reccommended to be between 1 and 10
-SPEED = 10
-
+# game settings
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH, SPEED
 
 #screen setup
 screen = Screen()

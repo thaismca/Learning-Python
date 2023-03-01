@@ -1,10 +1,11 @@
 from turtle import Turtle
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 import random
 
 class Food(Turtle):
     """Models the food in the Snake Game. It inherities from the Turtle class"""
 
-    def __init__(self):
+    def __init__(self, ):
         super().__init__()
         self.penup()
         self.shape("circle")
@@ -17,6 +18,8 @@ class Food(Turtle):
 
     def refresh_position(self):
         '''Sets new random x and y coordinates and moves the food to that position'''
-        random_x = random.randint(-280, 280)
-        random_y = random.randint(-280, 280)
+        available_x = (SCREEN_WIDTH / 2) - 20
+        available_y = (SCREEN_HEIGHT / 2) - 20
+        random_x = random.randint(-available_x, available_x)
+        random_y = random.randint(-available_y, available_y)
         self.goto(random_x, random_y)
