@@ -1,56 +1,38 @@
 # TODO: create the screen where the game will be played
-from turtle import Screen, Turtle
+from turtle import Screen
+from paddle import Paddle
 
-# Settings
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-PADDLE_PACE = 20
+# Game settings
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, P1_COORDINATES, P2_COORDINATES
 
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.title("PONG")
 screen.tracer(0)
+screen.listen()
 
 # TODO: create and move paddle
-paddle = Turtle()
-paddle.color("white")
-paddle.shape("square")
-paddle.shapesize(stretch_wid=5, stretch_len=1)
-paddle.penup()
-paddle.goto(SCREEN_WIDTH/2 - 50,0)
+player_1 = Paddle(P1_COORDINATES)
+# move the player_1 paddle when up and down keys are pressed
+screen.onkey(player_1.go_up, "Up")
+screen.onkey(player_1.go_down, "Down")
 
-def go_up():
-    """Moves the paddle up"""
-    # increment current y cordinate
-    new_y = paddle.ycor() + PADDLE_PACE
-    # move paddle in the y axis
-    paddle.goto(paddle.xcor(), new_y)
-
-def go_down():
-    """Moves the paddle down"""
-    # decrement from current y cordinate
-    new_y = paddle.ycor() - PADDLE_PACE
-    # move paddle in the y axis
-    paddle.goto(paddle.xcor(), new_y)
-
-# move the paddle when up and down keys are pressed
-screen.listen()
-screen.onkeypress(go_up, "Up")
-screen.onkeypress(go_down, "Down")
+# TODO: create another paddle
+player_2 = Paddle(P2_COORDINATES)
+# move the player_2 paddle when w and s keys are pressed
+screen.onkey(player_2.go_up, "w")
+screen.onkey(player_2.go_down, "s")
 
 
 # game state flag
 game_is_on = True
-while game_is_on():
+while game_is_on:
     screen.update()
 
 
 screen.exitonclick()
 
-
-
-# TODO: create another paddle
 
 # TODO: create ball and make it move
 
