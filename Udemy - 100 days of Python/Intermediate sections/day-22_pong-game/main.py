@@ -1,6 +1,8 @@
 # TODO: create the screen where the game will be played
 from turtle import Screen
 from paddle import Paddle
+from ball import Ball
+import time
 
 # Game settings
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, P1_COORDINATES, P2_COORDINATES
@@ -24,17 +26,19 @@ player_2 = Paddle(P2_COORDINATES)
 screen.onkey(player_2.go_up, "w")
 screen.onkey(player_2.go_down, "s")
 
+# TODO: create ball and make it move
+ball = Ball()
 
 # game state flag
 game_is_on = True
 while game_is_on:
+    time.sleep(0.05)
     screen.update()
+    ball.move()
 
 
 screen.exitonclick()
 
-
-# TODO: create ball and make it move
 
 # TODO: detect collision with wall and bounce
 
