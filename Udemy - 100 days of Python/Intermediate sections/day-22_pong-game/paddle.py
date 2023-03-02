@@ -1,5 +1,5 @@
 from turtle import Turtle
-from settings import PADDLE_PACE
+from settings import PADDLE_PACE, PADDLE_STRETCH
 
 class Paddle(Turtle):
     def __init__(self, coordinates):
@@ -7,7 +7,7 @@ class Paddle(Turtle):
         super().__init__()
         self.color("white")
         self.shape("square")
-        self.shapesize(stretch_wid=5, stretch_len=1)
+        self.shapesize(stretch_wid=PADDLE_STRETCH, stretch_len=1)
         self.penup()
         self.goto(coordinates)
 

@@ -18,7 +18,12 @@ class Ball(Turtle):
         new_y = self.ycor() + self.y_move
         self.goto(new_x, new_y)
 
-    def bounce(self):
+    def bounce_y(self):
         """Makes ball move in the opposite y direction"""
         # if current y_move is positive, it turns to negative, and vice-versa
         self.y_move *= -1
+
+    def bounce_x(self):
+        """Makes ball move in the opposite x direction"""
+        # if current x_move is positive, it turns to negative, and vice-versa
+        self.x_move *= -1
