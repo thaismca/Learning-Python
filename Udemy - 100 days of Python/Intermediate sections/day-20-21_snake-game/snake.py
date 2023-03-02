@@ -1,8 +1,9 @@
 from turtle import Turtle
+from settings import SHAPE_STRETCH
 
-# SETTINGS
-STARTING_POS = [(0,0), (-20,0), (-40,0)]
-MOVE_DISTANCE = 20
+# Snake settings
+STARTING_POS = [(0,0), (-20 * SHAPE_STRETCH,0), (-40 * SHAPE_STRETCH,0)]
+MOVE_DISTANCE = 20 * SHAPE_STRETCH
 # headings 
 UP_NORTH = 90
 LEFT_WEST = 180
@@ -29,6 +30,7 @@ class Snake():
         """Adds a new segment to the given position"""
         new_segment = Turtle()
         new_segment. shape('square')
+        new_segment.shapesize(SHAPE_STRETCH, SHAPE_STRETCH)
         new_segment.color('white')
         new_segment.penup()
         new_segment.goto(position)

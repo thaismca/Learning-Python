@@ -3,7 +3,7 @@ from settings import SCREEN_HEIGHT
 
 # Scoreboard settings
 TEXT_ALIGN = "center"
-FONT_SIZE = 12
+FONT_SIZE = 15
 FONT = ("Courier", FONT_SIZE, "bold")
 
 class Scoreboard(Turtle):

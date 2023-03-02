@@ -1,5 +1,5 @@
 from turtle import Turtle
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH, SHAPE_STRETCH
 import random
 
 class Food(Turtle):
@@ -12,12 +12,12 @@ class Food(Turtle):
         self.color("green")
         self.speed("fastest")
         # reduce the default circle size (20x20) by half (10x10)
-        self.shapesize(stretch_len=0.5, stretch_wid=0.5)
+        self.shapesize(stretch_len=SHAPE_STRETCH, stretch_wid=SHAPE_STRETCH)
         # go to a random location inside the screen
         self.refresh_position()
 
     def refresh_position(self):
-        '''Sets new random x and y coordinates and moves the food to that position'''
+        '''Sets new random x and y cordinates and moves the food to that position'''
         available_x = (SCREEN_WIDTH / 2) - 20
         available_y = (SCREEN_HEIGHT / 2) - 20
         random_x = random.randint(-available_x, available_x)
