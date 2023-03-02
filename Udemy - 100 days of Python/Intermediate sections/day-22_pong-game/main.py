@@ -5,7 +5,7 @@ from ball import Ball
 import time
 
 # Game settings
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, P1_COORDINATES, P2_COORDINATES
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, COLLISION_BUFFER, P1_COORDINATES, P2_COORDINATES
 
 screen = Screen()
 screen.bgcolor("black")
@@ -36,11 +36,14 @@ while game_is_on:
     screen.update()
     ball.move()
 
+# TODO: detect collision with wall and bounce
+    ball_y = ball.ycor()
+    if ball_y > SCREEN_HEIGHT/2 - COLLISION_BUFFER or ball_y < -SCREEN_HEIGHT/2 - COLLISION_BUFFER:
+        ball.bounce()
+
+
 
 screen.exitonclick()
-
-
-# TODO: detect collision with wall and bounce
 
 # TODO: detect collision with paddle and bounce
 
