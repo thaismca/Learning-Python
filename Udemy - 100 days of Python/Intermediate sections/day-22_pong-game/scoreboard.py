@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
 # Scoreboard settings
 TEXT_ALIGN = "center"
-FONT_SIZE = 60
+FONT_SIZE = 50
 FONT = ("Courier", FONT_SIZE, "bold")
 
 class Scoreboard(Turtle):
@@ -39,3 +39,13 @@ class Scoreboard(Turtle):
         self.left_score += 1
         self.clear()
         self.render_score()
+
+    def right_wins(self):
+        """Displays game over / right wins message in the center of the screen"""
+        self.home()
+        self.write("right player wins", align=TEXT_ALIGN, font=("Courier", int(FONT_SIZE/2), "bold"))
+
+    def left_wins(self):
+        """Displays game over / left wins message in the center of the screen"""
+        self.home()
+        self.write("left player wins", align=TEXT_ALIGN, font=("Courier", int(FONT_SIZE/2), "bold"))

@@ -5,7 +5,7 @@ from scoreboard import Scoreboard
 import time
 
 # Game settings
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, COLLISION_BUFFER, PADDLE_STRETCH, R_PLAYER_COORDINATES, L_PLAYER_COORDINATES
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, COLLISION_BUFFER, PADDLE_STRETCH, R_PLAYER_COORDINATES, L_PLAYER_COORDINATES, SCORE_TO_WIN
 
 # create the screen where the game will be played
 screen = Screen()
@@ -73,12 +73,20 @@ while game_is_on:
     # right paddle
     if ball.xcor() > right_paddle.xcor() + COLLISION_BUFFER:
         scoreboard.left_point()
-        ball.restart_position()
+        if scoreboard.left_score == SCORE_TO_WIN:
+            scoreboard.left_wins()
+            game_is_on = False
+        else:
+            ball.restart_position()
     
     # left paddle
     if ball.xcor() < left_paddle.xcor() - COLLISION_BUFFER:
         scoreboard.right_point()
-        ball.restart_position()
+        if scoreboard.right_score == SCORE_TO_WIN:
+            scoreboard.right_wins()
+            game_is_on = False
+        else:
+            ball.restart_position()
     
 
 screen.exitonclick()
