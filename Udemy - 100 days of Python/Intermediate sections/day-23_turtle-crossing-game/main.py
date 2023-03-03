@@ -4,9 +4,17 @@ from player import Player
 from car_manager import CarManager
 from scoreboard import Scoreboard
 
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+
 screen = Screen()
-screen.setup(width=600, height=600)
+screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.tracer(0)
+screen.listen()
+
+# TODO: create turtle player that starts at the bottom-center of the screen
+player = Player()
+# TODO: add ability to move turtle forward by pressing the up key
+screen.onkey(player.move_up, "Up")
 
 game_is_on = True
 while game_is_on:
@@ -14,8 +22,9 @@ while game_is_on:
     screen.update()
 
 
-# TODO: create turtle player that starts at the bottom-center of the screen
-# TODO: add ability to move turtle forward by pressing the up key
+screen.exitonclick()
+
+
 # TODO: add the ability to check when turtle reaches the top of the screen
 # TODO: restart turtle position to the bottom of the screen every time the turtle reaches the top
 # TODO: create scoreboard that displays the player current level
