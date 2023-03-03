@@ -12,3 +12,7 @@ PLAYER_MOVE_PACE = 10
 CAR_COLORS = ["red", "orange", "yellow", "green", "blue", "purple"]
 CAR_START_MOVE_PACE = 5
 CAR_MOVE_INCREMENT = 10
+
+# scoreboard
+FONT = ("Courier", 12, "bold")
+LEVEL_TEXT_POSTION = (-SCREEN_WIDTH/2 + 30, SCREEN_HEIGHT/2 - 30)

@@ -16,6 +16,9 @@ player = Player()
 # TODO: add ability to move turtle forward by pressing the up key
 screen.onkey(player.move_up, "Up")
 
+# TODO: create scoreboard that displays the player current level
+scoreboard = Scoreboard()
+
 game_is_on = True
 while game_is_on:
     time.sleep(0.1)
@@ -30,7 +33,7 @@ while game_is_on:
 screen.exitonclick()
 
 
-# TODO: create scoreboard that displays the player current level
+
 # TODO: increase player level and refresh scoreboard when turtle reaches the top of the screen
 # TODO: create a car 20px high by 40px wide that starts at the right edge of the screen and continuously moves forward
 # TODO: add the ability to randomize the car spawn point in the y axis, excluding a safe zone at both bottom and top areas of the screen
