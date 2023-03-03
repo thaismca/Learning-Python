@@ -32,9 +32,9 @@ ball = Ball()
 # game state flag
 game_is_on = True
 # x coordinate that would touch the surface of the right paddle
-max_x_right = player_1.xcor() - COLLISION_BUFFER
+right_collision_start = player_1.xcor() - COLLISION_BUFFER
 # x coordinate that would touch the surface of the left paddle
-min_x_left = player_2.xcor() + COLLISION_BUFFER
+left_collision_start = player_2.xcor() + COLLISION_BUFFER
 
 
 while game_is_on:
@@ -54,21 +54,28 @@ while game_is_on:
     Cannot rely only in a fixed distance between ball and paddle, because this distance is measured considering the center of each object,
     and this distance may vary depending on where in the paddle the collision with the ball will happen.'''
     # player_1 (right paddle)
-    if player_1.xcor() > ball.xcor() > max_x_right and ball.distance(player_1) < PADDLE_STRETCH * 10:
+    if player_1.xcor() > ball.xcor() > right_collision_start and ball.distance(player_1) < PADDLE_STRETCH * 10:
         ball.bounce_x()
         # this prevents bug where ball will move along the length of the paddle
-        ball.setposition(max_x_right - 1, ball.ycor())
+        ball.setposition(right_collision_start - 1, ball.ycor())
 
     # player 2 (left paddle)
-    if player_2.xcor() < ball.xcor() < min_x_left and ball.distance(player_2) < PADDLE_STRETCH * 10:
+    if player_2.xcor() < ball.xcor() < left_collision_start and ball.distance(player_2) < PADDLE_STRETCH * 10:
         ball.bounce_x()
-        ball.setposition(min_x_left + 1, ball.ycor())
+        ball.setposition(left_collision_start + 1, ball.ycor())
 
     # could have used an 'or' to link both conditionals above, but decided to keep them separate for better code readability
 
+# TODO: detect when paddle misses and the other player scores
+    # player_1 (right paddle)
+    if ball.xcor() > player_1.xcor():
+        ball.restart_position()
+    
+    # player_2 (left paddle)
+    if ball.xcor() < player_2.xcor():
+        ball.restart_position()
+    
 
 screen.exitonclick()
-
-# TODO: detect when paddle misses and the other player scores
 
 # TODO: keep and display score

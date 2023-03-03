@@ -27,3 +27,8 @@ class Ball(Turtle):
         """Makes ball move in the opposite x direction"""
         # if current x_move is positive, it turns to negative, and vice-versa
         self.x_move *= -1
+
+    def restart_position(self):
+        """Reset ball position to the center of the screen, and moves it towards the player that just scored"""
+        self.home()
+        self.bounce_x()
