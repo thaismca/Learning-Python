@@ -10,6 +10,14 @@ class Scoreboard(Turtle):
         self.penup()
         self.hideturtle()
         # level text rendering
+        self.render_level()
+
+    def render_level(self):
         self.goto(LEVEL_TEXT_POSTION)
         self.write(f"Level: {self.level}", align="left", font=FONT)
+
+    def increase_level(self):
+        self.level += 1
+        self.clear()
+        self.render_level()
 

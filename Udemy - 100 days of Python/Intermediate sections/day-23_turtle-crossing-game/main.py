@@ -28,13 +28,15 @@ while game_is_on:
     if player.ycor() >= FINISH_LINE_Y:
     # TODO: restart turtle position to the bottom of the screen every time the turtle reaches the top
         player.restart_position()
+    # TODO: increase player level and refresh scoreboard when turtle reaches the top of the screen
+        scoreboard.increase_level()
 
 
 screen.exitonclick()
 
 
 
-# TODO: increase player level and refresh scoreboard when turtle reaches the top of the screen
+
 # TODO: create a car 20px high by 40px wide that starts at the right edge of the screen and continuously moves forward
 # TODO: add the ability to randomize the car spawn point in the y axis, excluding a safe zone at both bottom and top areas of the screen
 # TODO: add the ability to spawn a new car every n-th time the game loop runs, n being a constant that represents the spawn rate
