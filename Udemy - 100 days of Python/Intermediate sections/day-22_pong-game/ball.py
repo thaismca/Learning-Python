@@ -11,6 +11,7 @@ class Ball(Turtle):
         self.speed("slow")
         self.x_move = BALL_PACE
         self.y_move = BALL_PACE
+        self.difficuty_level = 1
 
     def move(self):
         """Moves ball along the x and y axis"""
@@ -27,6 +28,9 @@ class Ball(Turtle):
         """Makes ball move in the opposite x direction"""
         # if current x_move is positive, it turns to negative, and vice-versa
         self.x_move *= -1
+        # increase ball speed each time it bounces in the x axis (it means collision with paddle)
+        self.difficuty_level *= 0.9
+
 
     def restart_position(self):
         """Reset ball position to the center of the screen, and moves it towards the player that just scored"""

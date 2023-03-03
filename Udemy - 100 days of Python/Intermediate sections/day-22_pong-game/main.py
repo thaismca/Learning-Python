@@ -1,4 +1,3 @@
-# TODO: create the screen where the game will be played
 from turtle import Screen
 from paddle import Paddle
 from ball import Ball
@@ -6,8 +5,9 @@ from scoreboard import Scoreboard
 import time
 
 # Game settings
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, COLLISION_BUFFER, PADDLE_STRETCH, P1_COORDINATES, P2_COORDINATES
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, COLLISION_BUFFER, PADDLE_STRETCH, R_PLAYER_COORDINATES, L_PLAYER_COORDINATES
 
+# create the screen where the game will be played
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
@@ -15,21 +15,21 @@ screen.title("PONG")
 screen.tracer(0)
 screen.listen()
 
-# TODO: create and move paddle
-right_paddle = Paddle(P1_COORDINATES)
+# create and move paddle
+right_paddle = Paddle(R_PLAYER_COORDINATES)
 # move the player_1 paddle when up and down keys are pressed
 screen.onkey(right_paddle.go_up, "Up")
 screen.onkey(right_paddle.go_down, "Down")
 
-# TODO: create another paddle
-left_paddle = Paddle(P2_COORDINATES)
+# create another paddle
+left_paddle = Paddle(L_PLAYER_COORDINATES)
 # move the player_2 paddle when w and s keys are pressed
 screen.onkey(left_paddle.go_up, "w")
 screen.onkey(left_paddle.go_down, "s")
 
-# TODO: create ball and make it move
+#create ball and make it move
 ball = Ball()
-
+# create scoreboard
 scoreboard = Scoreboard()
 
 # game state flag
@@ -41,16 +41,16 @@ left_collision_start = left_paddle.xcor() + COLLISION_BUFFER
 
 
 while game_is_on:
-    time.sleep(0.05)
+    time.sleep(0.05 * ball.difficuty_level)
     screen.update()
     ball.move()
 
-# TODO: detect collision with wall and bounce
+# detect collision with wall and bounce
     ball_y = ball.ycor()
     if ball_y > SCREEN_HEIGHT/2 - COLLISION_BUFFER or ball_y < -SCREEN_HEIGHT/2 + COLLISION_BUFFER:
         ball.bounce_y()
 
-# TODO: detect collision with paddle and bounce
+# detect collision with paddle and bounce
     '''This collision will be detected by checking two conditions: 
         - if the ball has reached the xcor that would touch the paddle, and it's still within the bounds (player's xcor)
         - and if the paddle is within the distance represented by half of the paddle size.
@@ -69,18 +69,15 @@ while game_is_on:
 
     # could have used an 'or' to link both conditionals above, but decided to keep them separate for better code readability
 
-# TODO: detect when paddle misses and the other player scores
-# TODO: keep and display score
+# detect when paddle misses and the other player scores
     # right paddle
     if ball.xcor() > right_paddle.xcor() + COLLISION_BUFFER:
         scoreboard.left_point()
-        game_is_on = False
         ball.restart_position()
     
     # left paddle
     if ball.xcor() < left_paddle.xcor() - COLLISION_BUFFER:
         scoreboard.right_point()
-        game_is_on = False
         ball.restart_position()
     
 
