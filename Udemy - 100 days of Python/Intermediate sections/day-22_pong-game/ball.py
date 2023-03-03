@@ -35,4 +35,5 @@ class Ball(Turtle):
     def restart_position(self):
         """Reset ball position to the center of the screen, and moves it towards the player that just scored"""
         self.home()
+        self.difficuty_level = 1
         self.bounce_x()
