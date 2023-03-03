@@ -31,6 +31,11 @@ ball = Ball()
 
 # game state flag
 game_is_on = True
+# x coordinate that would touch the right paddle
+max_x_right = player_1.xcor() - COLLISION_BUFFER
+# x coordinate that would touch the left paddle
+min_x_left = player_2.xcor() + COLLISION_BUFFER
+
 while game_is_on:
     time.sleep(0.05)
     screen.update()
@@ -48,15 +53,11 @@ while game_is_on:
     Cannot rely only in a fixed distance between ball and paddle, because this distance is measured considering the center of each object,
     and this distance may vary depending on where in the paddle the collision with the ball will happen.'''
     # player_1 (right paddle)
-    # x coordinate that would touch the right paddle
-    max_x_right = player_1.xcor() - COLLISION_BUFFER
     if ball.xcor() > max_x_right and ball.distance(player_1) < PADDLE_STRETCH * 10:
         ball.bounce_x()
 
     # player 2 (left paddle)
-    # x coordinate that would touch the left paddle
-    max_x_left = player_2.xcor() + COLLISION_BUFFER
-    if ball.xcor() < max_x_left and ball.distance(player_2) < PADDLE_STRETCH * 10:
+    if ball.xcor() < min_x_left and ball.distance(player_2) < PADDLE_STRETCH * 10:
         ball.bounce_x()
 
 
