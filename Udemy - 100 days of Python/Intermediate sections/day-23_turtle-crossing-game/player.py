@@ -13,3 +13,5 @@ class Player(Turtle):
     def move_up(self):
         self.forward(PLAYER_MOVE_PACE)
 
+    def restart_position(self):
+        self.goto(PLAYER_START_POSITION)

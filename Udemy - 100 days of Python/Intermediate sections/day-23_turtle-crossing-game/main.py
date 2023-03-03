@@ -4,7 +4,7 @@ from player import Player
 from car_manager import CarManager
 from scoreboard import Scoreboard
 
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_LINE_Y
 
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
@@ -21,12 +21,15 @@ while game_is_on:
     time.sleep(0.1)
     screen.update()
 
+    # TODO: add the ability to check when turtle reaches the top of the screen
+    if player.ycor() >= FINISH_LINE_Y:
+    # TODO: restart turtle position to the bottom of the screen every time the turtle reaches the top
+        player.restart_position()
+
 
 screen.exitonclick()
 
 
-# TODO: add the ability to check when turtle reaches the top of the screen
-# TODO: restart turtle position to the bottom of the screen every time the turtle reaches the top
 # TODO: create scoreboard that displays the player current level
 # TODO: increase player level and refresh scoreboard when turtle reaches the top of the screen
 # TODO: create a car 20px high by 40px wide that starts at the right edge of the screen and continuously moves forward
