@@ -29,3 +29,13 @@ class CarManager():
         for car in self.all_cars:
             car.forward(self.pace)
 
+    def increase_pace(self):
+        """Increases the current pace by the amount of the CAR_MOVE_INCREMENT in settings"""
+        self.pace += CAR_MOVE_INCREMENT
+
+    def reset_all_cars(self):
+        """Clears all the existing cars in the all_cars list"""
+        for car in self.all_cars:
+            car.hideturtle()
+        self.all_cars = []
+

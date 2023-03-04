@@ -37,10 +37,14 @@ while game_is_on:
 
     # TODO: add the ability to check when turtle reaches the top of the screen
     if player.ycor() >= FINISH_LINE_Y:
+    # clear all cars in the screen from the previous level
+        cars.reset_all_cars()
     # TODO: restart turtle position to the bottom of the screen every time the turtle reaches the top
         player.restart_position()
     # TODO: increase player level and refresh scoreboard when turtle reaches the top of the screen
         scoreboard.increase_level()
+    # TODO: add the ability to increase car speed at each level
+        cars.increase_pace()
 
     loop_counter += 1
 
@@ -48,7 +52,6 @@ while game_is_on:
 screen.exitonclick()
 
 
-# TODO: add the ability to increase car speed at each level
 # TODO: add the ability to detect collision between a car and turtle
 # TODO: add the ability to display a game over message in the scoreboard when a collision between car and turtle is detected
 # TODO: end the game loop when a collision between car and turtle is detected
