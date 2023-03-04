@@ -4,7 +4,7 @@ from player import Player
 from car_manager import CarManager
 from scoreboard import Scoreboard
 
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_LINE_Y, SPAWN_INTERVAL
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_LINE_Y, SPAWN_INTERVAL, COLLISION_RANGE
 
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
@@ -46,12 +46,15 @@ while game_is_on:
     # TODO: add the ability to increase car speed at each level
         cars.increase_pace()
 
+    # TODO: add the ability to detect collision between a car and turtle
+    # TODO: end the game loop when a collision between car and turtle is detected
+    for car in cars.all_cars:
+        if car.distance(player) < COLLISION_RANGE:
+            game_is_on = False
+
     loop_counter += 1
 
 
 screen.exitonclick()
 
-
-# TODO: add the ability to detect collision between a car and turtle
 # TODO: add the ability to display a game over message in the scoreboard when a collision between car and turtle is detected
-# TODO: end the game loop when a collision between car and turtle is detected
