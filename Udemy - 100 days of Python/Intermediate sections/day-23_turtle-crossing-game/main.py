@@ -6,17 +6,18 @@ from scoreboard import Scoreboard
 
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_LINE_Y, SPAWN_INTERVAL, COLLISION_RANGE
 
+# create screen
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.tracer(0)
 screen.listen()
 
-# TODO: create turtle player that starts at the bottom-center of the screen
+# create turtle player that starts at the bottom-center of the screen
 player = Player()
-# TODO: add ability to move turtle forward by pressing the up key
+# add ability to move turtle forward by pressing the up key
 screen.onkey(player.move_up, "Up")
 
-# TODO: create scoreboard that displays the player current level
+# create scoreboard that displays the player current level
 scoreboard = Scoreboard()
 
 # cars manager instance
