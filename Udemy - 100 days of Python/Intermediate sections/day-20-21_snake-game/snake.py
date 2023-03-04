@@ -50,6 +50,15 @@ class Snake():
         self.head.forward(MOVE_DISTANCE)
 
     
+    def reset_snake(self):
+        """Clear current snake segments and creates a new starting snake with three segments"""
+        for segment in self.segments:
+            segment.hideturtle()
+        self.segments.clear()
+        self.createSnake()
+        self.head = self.segments[0]
+
+    
     def up(self):
         '''Turns the snake to north direction, if it's currently not going towards south'''
         if self.head.heading() != DOWN_SOUTH:

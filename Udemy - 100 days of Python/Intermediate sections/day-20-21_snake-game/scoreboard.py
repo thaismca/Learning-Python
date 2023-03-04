@@ -16,21 +16,31 @@ class Scoreboard(Turtle):
         self.speed("fastest")
         # keeps track of the score -> starts at 0
         self.score = 0
+        # keeps track of the high score -> starts at 0
+        self.high_score = 0
         # sets the location of the text in the screen
         self.goto(0, (SCREEN_HEIGHT / 2) - FONT_SIZE * 2)
         self.render_score()
     
     def render_score(self):
         """Renders score text on the screen"""
-        self.write(f"Score: {self.score}", align=TEXT_ALIGN, font=FONT)
+        self.clear()
+        self.write(f"Score: {self.score}  |  High Score: {self.high_score}", align=TEXT_ALIGN, font=FONT)
 
     def increase_score(self):
         """Increases score by one and updates the rendered text"""
         self.score += 1
-        self.clear()
         self.render_score()
 
-    def game_over(self):
-        """Renders game over text at the center of the screen"""
-        self.goto(0,0)
-        self.write(f"GAME OVER", align=TEXT_ALIGN, font=FONT)
+    # def game_over(self):
+    #     """Renders game over text at the center of the screen"""
+    #     self.goto(0,0)
+    #     self.write(f"GAME OVER", align=TEXT_ALIGN, font=FONT)
+
+    def reset_score(self):
+        """Replaces high score if it was beaten, and resets score for a new game"""
+        if self.score > self.high_score:
+            self.high_score = self.score
+        self.score = 0
+        self.render_score()
+        
