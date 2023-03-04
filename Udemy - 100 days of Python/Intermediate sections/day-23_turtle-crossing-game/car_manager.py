@@ -17,9 +17,9 @@ class CarManager():
         new_car.shapesize(stretch_wid=1, stretch_len=2)
         new_car.setheading(180)
         new_car.penup()
-# TODO: add the ability to randomize car color
+        # add the ability to randomize car color
         new_car.color(random.choice(CAR_COLORS))
-# TODO: add the ability to randomize the car spawn point in the y axis, excluding a safe zone at both bottom and top areas of the screen
+        # add the ability to randomize the car spawn point in the y axis, excluding a safe zone at both bottom and top areas of the screen
         new_car.goto(SCREEN_WIDTH/2 , random.randint(SPAWN_RANGE_MIN, SPAWN_RANGE_MAX))
         self.all_cars.append(new_car)
 

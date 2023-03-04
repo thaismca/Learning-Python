@@ -11,7 +11,9 @@ class Player(Turtle):
         self.goto(PLAYER_START_POSITION)
 
     def move_up(self):
+        """Moves turtle in the north direction at a given pace"""
         self.forward(PLAYER_MOVE_PACE)
 
     def restart_position(self):
+        """Resets player position to the starting point"""
         self.goto(PLAYER_START_POSITION)
