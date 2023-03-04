@@ -50,11 +50,11 @@ while game_is_on:
     # TODO: end the game loop when a collision between car and turtle is detected
     for car in cars.all_cars:
         if car.distance(player) < COLLISION_RANGE:
+    # TODO: add the ability to display a game over message in the scoreboard when a collision between car and turtle is detected
+            scoreboard.render_game_over()
             game_is_on = False
 
     loop_counter += 1
 
 
 screen.exitonclick()
-
-# TODO: add the ability to display a game over message in the scoreboard when a collision between car and turtle is detected

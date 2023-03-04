@@ -18,8 +18,9 @@ SPAWN_RANGE_MAX = SCREEN_HEIGHT/2 - SAFE_ZONE
 SPAWN_INTERVAL = 10
 
 # player and cars collision
-COLLISION_RANGE = 25
+COLLISION_RANGE = 22
 
 # scoreboard
-FONT = ("Courier", 12, "bold")
+LEVEL_TEXT_FONT = ("Courier", 14, "bold")
 LEVEL_TEXT_POSTION = (-SCREEN_WIDTH/2 + 30, SCREEN_HEIGHT/2 - 30)
+GAME_OVER_TEXT_FONT = ("Courier", 24, "bold")
