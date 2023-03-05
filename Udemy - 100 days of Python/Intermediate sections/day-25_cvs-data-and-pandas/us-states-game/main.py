@@ -15,17 +15,23 @@ turtle.shape(bg_image)
 
 # TODO: read states from 50_states.csv and generate a list with all the 50 states
 data = pandas.read_csv(DATA_FILE_PATH)
-states = data.state
+states = data.state.to_list()
 # TODO: while there are still states to be guessed, display a pop up input to receive a player's answer
 score = 0
 while len(states) > 0:
     # TODO: display current score in the title of the pop up input
-    answer = screen.textinput(title=f"Current score: {score}/50", prompt="What's another state's name?")
+    # need to capitalize the first letter in each word, to match dataframe format
+    answer = screen.textinput(title=f"Current score: {score}/50", prompt="What's another state's name?").title()
 
-# TODO: check if player's answer matches one of the states in the 50_states.csv
+    # TODO: check if player's answer matches one of the states in the 50_states.csv
+    if answer in states:
+        # TODO: update the list of states pending to be guessed, so the player cannot score twice with the same state
+        states.remove(answer)
+        # TODO: update player score
+        score += 1
+    
+
 # TODO: if there's a match, display state name in the map at the corresponding x,y coordinates provided in the 50_states.csv
-# TODO: update the list of states pending to be guessed, so the player cannot score twice with the same state
-# TODO: update player score
 # TODO: if all states were guessed, end game with a congrats message
 
 screen.exitonclick()
