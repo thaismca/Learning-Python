@@ -45,5 +45,12 @@ while len(states) > 0:
         print_name(answer, x_pos, y_pos)
 
 # TODO: if all states were guessed, end game with a congrats message
+if len(states) == 0:
+    success_message = turtle.Turtle()
+    success_message.hideturtle()
+    success_message.penup()
+    success_message.color("green")
+    success_message.goto(0,250)
+    success_message.write("Congrats! You got all U.S. States right!", align="center", font=("Courier", 20, "bold"))
 
 screen.exitonclick()
