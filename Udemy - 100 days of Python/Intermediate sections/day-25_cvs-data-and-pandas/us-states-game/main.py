@@ -3,6 +3,7 @@ import pandas
 
 # path for the csv file
 DATA_FILE_PATH = "./Intermediate sections/day-25_cvs-data-and-pandas/us-states-game/50_states.csv"
+PROJECT_DIRECTORY_PATH = "./Intermediate sections/day-25_cvs-data-and-pandas/us-states-game/"
 
 # function that will print state name in map
 def print_name(state, x, y):
@@ -30,7 +31,11 @@ score = 0
 while len(states) > 0:
     # TODO: display current score in the title of the pop up input
     # need to capitalize the first letter in each word, to match dataframe format
-    answer = screen.textinput(title=f"Current score: {score}/50", prompt="What's another state's name?").title()
+    try: 
+        answer = screen.textinput(title=f"Current score: {score}/50", prompt="What's another state's name?").title()
+    except:
+        # if player clicks cancel -> dialog returns None
+        break
 
     # TODO: check if player's answer matches one of the states in the 50_states.csv
     if answer in states:
@@ -52,5 +57,13 @@ if len(states) == 0:
     success_message.color("green")
     success_message.goto(0,250)
     success_message.write("Congrats! You got all U.S. States right!", align="center", font=("Courier", 20, "bold"))
-
-screen.exitonclick()
+    screen.exitonclick()
+else:
+    # this can be the scenario where player clicks cancel in the pop up without completing all the states
+    # save the remaining states to a .csv file -> learn tool
+    learn_states_dict = {
+        "missing states": states
+    }
+    learn_states_dataframe = pandas.DataFrame(learn_states_dict)
+    # create csv from dataframe
+    learn_states_dataframe.to_csv(PROJECT_DIRECTORY_PATH + "learn_states.csv")
