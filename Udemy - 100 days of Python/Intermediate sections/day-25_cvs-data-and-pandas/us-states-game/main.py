@@ -4,6 +4,15 @@ import pandas
 # path for the csv file
 DATA_FILE_PATH = "./Intermediate sections/day-25_cvs-data-and-pandas/us-states-game/50_states.csv"
 
+# function that will print state name in map
+def print_name(state, x, y):
+    """prints the state name on the screen, at the provided x and y coordinate"""
+    name = turtle.Turtle()
+    name.hideturtle()
+    name.penup()
+    name.goto(x,y)
+    name.write(state, align="center", font=("Courier", 8, "normal"))
+
 # create screen
 screen = turtle.Screen()
 screen.title("U.S. States Game")
@@ -29,9 +38,12 @@ while len(states) > 0:
         states.remove(answer)
         # TODO: update player score
         score += 1
-    
 
-# TODO: if there's a match, display state name in the map at the corresponding x,y coordinates provided in the 50_states.csv
+        # TODO: if there's a match, display state name in the map at the corresponding x,y coordinates provided in the 50_states.csv
+        x_pos = int(data[data.state == answer].x)
+        y_pos = int(data[data.state == answer].y)
+        print_name(answer, x_pos, y_pos)
+
 # TODO: if all states were guessed, end game with a congrats message
 
 screen.exitonclick()
