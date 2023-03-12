@@ -1,4 +1,5 @@
 from tkinter import *
+import datetime
 
 class App_Components(Frame):
     def __init__(self, master):
@@ -41,6 +42,7 @@ class App_Components(Frame):
         self.pack()
 
     def update_unit_options(self, *args):
+        '''Updates all items in the base unit dropdown selection based on current radio button selection for conversion type'''
         units = self.conversion_options[self.conversion_type_state.get().capitalize()]
         self.base_unit_state.set(units[0])
 
@@ -49,3 +51,31 @@ class App_Components(Frame):
 
         for unit in units:
             menu.add_command(label=unit, command=lambda base_unit=unit: self.base_unit_state.set(base_unit))
+
+    
+    # TODO: implement conversion calculation formulas
+    
+    def distance_speed_converter(self):
+        '''Converts inputted distance or speed from unit selected in the dropdown menu to its pair, and return the result'''
+        if self.base_unit_state == 'miles' or self.base_unit_state == 'mph':
+            result = float(self.user_input.get()) * 1.6093
+
+        elif self.base_unit_state == 'kilometers' or self.base_unit_state == 'kph':
+            result = float(self.user_input.get()) * 0.6214
+        
+        return result
+
+    def pace_converter(self):
+        '''Converts inputted pace from unit selected in the dropdown menu to its pair, and returns the result'''
+        min, sec = self.user_input.get().split(':')
+        total_seconds = (int(min) * 60) + int(sec)
+
+        if self.base_unit_state == 'min/miles':
+            total_seconds *= 0.6214
+        
+        elif self.base_unit_state == 'min/km':
+            total_seconds *= 1.6093
+
+        result = str(datetime.timedelta(seconds=int(total_seconds)))[-5:]
+
+        return result
