@@ -12,8 +12,11 @@ class Runner_Conversion_Calculator(Frame):
             'Speed': ['mph', 'kph'],
             'Pace': ['min/mile', 'min/km']
         }
+
         # create all screen elements for the application
         self.create_screen_elements()
+        # make all widgets take focus when you click on them
+        master.bind_all("<Button-1>", lambda event: event.widget.focus_set())
 
 
 # screen elements creation
@@ -40,6 +43,8 @@ class Runner_Conversion_Calculator(Frame):
 
         # base value input
         self.user_input = Entry(self, width=10)
+        self.user_input.bind("<FocusIn>", self.focus_in_input)
+        self.user_input.bind("<FocusOut>", self.focus_out_input)
         self.user_input.grid(row=1, column=0)
 
 
@@ -55,13 +60,18 @@ class Runner_Conversion_Calculator(Frame):
         self.result_label.grid(row=1,column=3)
 
 
-        # trace when conversion_type_state is written and run callbacks to update base unit options and define button command
+        # trace when conversion_type_state is written and run callbacks to:
+        # update base unit options
         self.conversion_type_state.trace('w', self.update_unit_options)
+        # update entry placeholder
+        self.conversion_type_state.trace('w', self.update_input_placeholder)
+        # define button command
         self.conversion_type_state.trace('w', self.define_button_command)
+
         # trace when base_unit_state is written and run a callback to update the target unit 
         self.base_unit_state.trace('w', self.set_target_unit)
     
-        # set default radio option
+        # set default radio button selection option
         self.conversion_type_state.set('distance')
         # add all components to the screen
         self.pack()
@@ -77,9 +87,11 @@ class Runner_Conversion_Calculator(Frame):
         # sets the second item as target unit by default
         self.result_target_unit.set(units[1])
 
+        # get access to base_data_unit_options 
         menu = self.base_unit_options['menu']
+        # delete all data from previous conversion type selection
         menu.delete(0, 'end')
-        # attach command to set base_unit_state as current selected unit 
+        # add new units with the respective labels and attached commands to set base_unit_state as current selected unit 
         for unit in units:
             menu.add_command(label=unit, command=lambda base_unit=unit: self.base_unit_state.set(base_unit))
 
@@ -93,13 +105,40 @@ class Runner_Conversion_Calculator(Frame):
 
 
 
+    def update_input_placeholder(self, *args):
+        '''Based on conversion type selected, sets a text in the input with the expected format.'''
+        if self.conversion_type_state.get() == 'pace':
+            # delete current placeholder from previous conversion type selection
+            self.user_input.delete(0, 'end')
+            # insert new placeholder in the correct format
+            self.user_input.insert(0,'00:00')
+        else:
+            self.user_input.delete(0, 'end')
+            self.user_input.insert(0,'0.00')
+
+
+    
+    def focus_in_input(self, *args):
+        '''Remove placeholder from entry when user focus in'''
+        if self.user_input.get() == '0.00' or self.user_input.get() == '00:00':
+            self.user_input.delete(0, 'end')
+
+        
+            
+    def focus_out_input(self, *args):
+        '''Adds placeholder from entry when user focus out without entering data in the input'''
+        if not self.user_input.get():
+            self.update_input_placeholder()
+
+    
+    
     def define_button_command(self, *args):
-        '''Defines calculation to be performed when button is clicked, based on conversion type selected'''
+        '''Based on conversion type selected, defines calculation to be performed when button is clicked.'''
         if self.conversion_type_state.get() == 'pace':
             self.calculate_button.config(command = self.pace_converter)
         else:
             self.calculate_button.config(command = self.distance_speed_converter)
-    
+
 
 
     def display_result(self):

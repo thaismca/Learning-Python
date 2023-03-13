@@ -47,7 +47,7 @@ Conversion type
   - conversion_type options -> serie of radio buttons selectors, for the conversion type
   - options are based on the keys of the conversion options dictionary (distance, speed, pace)
   - conversion_type_state -> variable to hold on to the selected state of conversion type
-  - changes applied to conversion_type_state are traced and, whenever they happen (when a new option is selected) that impacts both the options in the base_unit_options dropdown and the formula applied to the calculate_button command
+  - changes applied to conversion_type_state are traced and, whenever they happen (when a new option is selected) that impacts the options in the base_unit_options dropdown, the placeholder in the user_input entry, and the formula applied to the calculate_button command
 
 Base unit  
   - base_unit_options -> base unit dropdown selector
@@ -58,6 +58,8 @@ Base unit
 User input
   - user_input -> entry where the user can input a value to be converted
   - expects a specific type and format, depending on the conversion type that was selected, and failing to enter data in the expected format will display an error message when clicking the 'calculate' button
+  - placeholder was added to help the user understand the expected format, and it changes based on the conversion type selection
+  - placeholder is deleted whe user focus in the entry, and it is added back if the user leaves the input without entering some value
   - Distance and Speed: expect a numeric value, with or without decimals
   - Pace: expects numeric values for minutes and seconds, in the format minutes:seconds
 
@@ -88,17 +90,33 @@ METHODS
 - It sets taget unit as the other option in the dropdown which is not the one that is currently selected
 
 
-4. define_button_command():
+4. update_input_placeholder():
+- Method that applies changes to user_input placeholder, and its called when there are changes in the conversion type that is currently selected, or when user takes focus out of the input without entering some value
+- The placeholder has the format expected for the user input, depending on the conversion typw that is currently selected
+
+
+5. focus_in_input():
+- Method that is called when user focuses in the user_input
+- Removes the placeholder text
+- Won't remove text that was entered by the user, since it will first check if the current value matches the placeholder value
+
+
+6. focus_out_input():
+- Method that is called when user focuses out of the user_input
+- Addes the placeholder text back, if the user leaves the entry without entering some value
+
+
+7. define_button_command():
 - Method that applies changes to the calculate_button, and its called when there are changes in the conversion type that is currently selected
 - Defines calculation to be performed when button is clicked
 
 
-5. display_result():
+8. display_result():
 - Puts together a string with the result and sets it as text attribute for the result_label
 - Called after the calculations in either one of the conversion formulas is done and there is a new result to be displayed
 
 
-6. distance_speed_converter():
+9. distance_speed_converter():
 - Converts inputted distance or speed from base unit selected in the dropdown menu to its target pair
 - Command applied to the calculate_button when the conversion type selected is either Distance or Speed
 - Expects a numeric value
@@ -106,7 +124,7 @@ METHODS
 - If value is not valid, it changes the result_label to output an error string
 
 
-7. pace_converter():
+10. pace_converter():
 - Converts inputted pace from base unit selected in the dropdown menu to its target pair
 - Command applied to the calculate_button when the conversion type selected is Pace
 - Expects input in the format minutes:seconds, where both minutes and seconds are both numeric
