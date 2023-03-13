@@ -1,7 +1,8 @@
 from tkinter import *
 import datetime
 
-class App_Components(Frame):
+class Runner_Conversion_Calculator(Frame):
+    '''Models conversion calculator that converts distance, speed and pace units, commonly used by road runners'''
     def __init__(self, master):
         Frame.__init__(self, master)
 
@@ -11,10 +12,11 @@ class App_Components(Frame):
             'Speed': ['mph', 'kph'],
             'Pace': ['min/mile', 'min/km']
         }
-
+        # create all screen elements for the application
         self.create_screen_elements()
 
 
+# screen elements creation
     def create_screen_elements(self):
         '''Creates all elements present in the screen for the application'''
         # conversion tyoe radiobutton selection
@@ -65,7 +67,7 @@ class App_Components(Frame):
         self.pack()
 
 
-
+# screen elements management
     def update_unit_options(self, *args):
         '''Updates all items in the base unit dropdown selection based on current radio button selection for conversion type.'''
         # get all units from conversion_options dictionary where the key matches the conversion type selected
@@ -100,7 +102,16 @@ class App_Components(Frame):
     
 
 
-    # TODO: implement conversion calculation formulas
+    def display_result(self):
+        '''Puts together a string with the result and sets it as text attribute for the result_label'''
+        input_value = self.user_input.get()
+        base_unit = self.base_unit_state.get()
+        result_value = self.result.get()
+        target_unit = self.result_target_unit.get()
+        self.result_label.config(text=f'{input_value}{base_unit.lower()} equals to {result_value}{target_unit.lower()}')
+        
+        
+#conversion calculation formulas
     def distance_speed_converter(self):
         '''Converts inputted distance or speed from base unit selected in the dropdown menu to its target pair'''
         try:
@@ -132,13 +143,3 @@ class App_Components(Frame):
        
         except:
             self.result_label.config(text='Invalid input format. Please enter input in format MM:SS')
-
-
-
-    def display_result(self):
-        '''Puts together a string with the result and sets it as text attribute for the result_label'''
-        input_value = self.user_input.get()
-        base_unit = self.base_unit_state.get()
-        result_value = self.result.get()
-        target_unit = self.result_target_unit.get()
-        self.result_label.config(text=f'{input_value}{base_unit.lower()} equals to {result_value}{target_unit.lower()}')
