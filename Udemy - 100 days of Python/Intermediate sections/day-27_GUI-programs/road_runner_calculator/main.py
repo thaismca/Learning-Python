@@ -11,17 +11,10 @@ window = Tk()
 window.title("The road runner conversion calculator")
 window.minsize(width=500, height=250)
 
-# TODO: create a radiobutton selection for the conversion types options (distance = default selection, speed or pace)
-# TODO: create a selection for the base unit that changes its options based on conversion type selecion
-# TODO: create input for base value to be converted
+# create instance of the running program
 from app_components import App_Components
 app = App_Components(window)
 
 
 # keep the window open and listening for user interactions
 window.mainloop()
-
-
-# TODO: implement conversion calculation formulas
-# TODO: create button that applies calculation formula based on conversion options selected
-# TODO: create result label that displayes result when button is clicked 
