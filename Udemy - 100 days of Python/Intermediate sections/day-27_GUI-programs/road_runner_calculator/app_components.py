@@ -49,8 +49,8 @@ class App_Components(Frame):
         # result label
         self.result = StringVar(self, '')
         self.result_target_unit = StringVar(self)
-        self.result_label = Label(self, text='', font=("Arial", 12, "bold"))
-        self.result_label.grid(row=2,column=1)
+        self.result_label = Label(self, text='', font=("Arial", 10, "bold"))
+        self.result_label.grid(row=1,column=3)
 
 
         # trace when conversion_type_state is written and run callbacks to update base unit options and define button command

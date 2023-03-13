@@ -9,7 +9,8 @@ from tkinter import *
 # TODO: create a tkinter window
 window = Tk()
 window.title("The road runner conversion calculator")
-window.minsize(width=500, height=250)
+window.minsize(width=600, height=100)
+window.config(pady=10)
 
 # create instance of the running program
 from app_components import App_Components
