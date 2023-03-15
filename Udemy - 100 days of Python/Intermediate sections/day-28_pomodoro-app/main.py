@@ -17,13 +17,13 @@ reps = 0
 work_sessions_counter = ''
 running_timer = None
 
-# TODO: add countdown mechanism
 # ---------------------------------- TIMER MECHANISM --------------------------------- #
-
 def start_timer():
-    '''This function starts a pomodoro timer, taking the session times from theprogram constants WORK_MIN, SHORT_BREAK_MIN and LONG_BREAK_MIN.
+    '''This function starts a pomodoro timer, taking the session times from th eprogram constants WORK_MIN, SHORT_BREAK_MIN and LONG_BREAK_MIN.
     It runs a certain number of work sessions, defined in WORK_SESSIONS_PER_BLOCK, before entering a long break.'''
-    # TODO: set different timer sessions and values
+    # disable the start button, so it cannot be clicked when there's a timer running
+    start_button.config(state='disabled')
+    # set different timer sessions and values -> based on app constants
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
@@ -36,7 +36,7 @@ def start_timer():
         countdown(long_break_sec)
         session_label.config(text="BREAK", fg=RED)
     
-    # reps doen not match a multiple of (WORK_SESSIONS_PER_BLOCK * 2) -> not the end of a block
+    # reps does not match a multiple of (WORK_SESSIONS_PER_BLOCK * 2) -> not the end of a block
     else:
         # odd means work
         if reps % 2 != 0:
@@ -66,6 +66,7 @@ def countdown(seconds):
         global running_timer
         running_timer = window.after(1000, countdown, seconds - 1)
     else:
+        pop_up_window()
         # check if the session that just ended was a work session
         if reps % 2 != 0:
             # TODO: add checkmark for work session completed
@@ -75,10 +76,21 @@ def countdown(seconds):
 
         #start timer again
         start_timer()
+        
+
+def pop_up_window():
+    '''This function makes the app emit a sound notification, opens the app window if it's currently minimized,
+    and brings the app window to the front.'''
+    window.bell()
+    window.deiconify()
+    window.attributes('-topmost',True)
+    window.after_idle(window.attributes,'-topmost',False)
+
+
 
 # ------------------------------------- RESET MECHANISM ---------------------------------- #
-# TODO: add functionality to reset the whole application when clicking the reset button
 def reset_app():
+    '''This function resets the whole application.'''
     # cancel running timer
     window.after_cancel(running_timer)
     # get all global variables back to values on launch
@@ -90,10 +102,12 @@ def reset_app():
     canvas.itemconfig(timer_text, text='00:00')
     session_label.config(text='Press Start', fg=GREEN)
     work_sessions_counter_label.config(text=work_sessions_counter)
+    start_button.config(state='normal')
     
-    # ------------------------------------- UI SETUP ------------------------------------- #
 
-# TODO: set up UI with:
+
+# --------------------------------------- UI SETUP --------------------------------------- #
+# create app window
 window = Tk()
 window.title("Pomodoro")
 window.config(padx=100, pady=50, bg=YELLOW)
@@ -101,15 +115,13 @@ window.config(padx=100, pady=50, bg=YELLOW)
 # session label (break/work)
 session_label = Label(text='Press Start', font=(FONT_NAME, 40, "bold"), fg=GREEN, bg=YELLOW, pady=20)
 
-# a background image
-# countdown label
 #create a canvas with the size of the image
 canvas = Canvas(width=204, height=224, bg=YELLOW, highlightthickness=0)
 # use the PhotoImage widget to display the image
 tomato_image = PhotoImage(file=BG_IMAGE)
-# add image to the canvas in the passed coordinates (anchor point in the center of the item)  
+# add background image to the canvas in the passed coordinates (anchor point in the center of the item)  
 canvas.create_image(102, 112, image=tomato_image)
-# add text to the canvas in the passed coordinates -> order matters, later goes on top
+# add timer text to the canvas in the passed coordinates -> order matters, later goes on top
 timer_text = canvas.create_text(102, 130, text="00:00", fill='white', font=(FONT_NAME, 24, 'bold'))
 
 # start and reset buttons
@@ -119,7 +131,7 @@ reset_button = Button(text='reset', command=reset_app)
 # work sessions counter (checkmarks)
 work_sessions_counter_label = Label(text=work_sessions_counter, font=(FONT_NAME, 20, "normal"), fg=GREEN, bg=YELLOW, pady=20)
 
-# pace items on screen
+# place items on screen
 session_label.grid(row=0, column=1)
 canvas.grid(row=1, column=1)
 start_button.grid(row=2, column=0)
