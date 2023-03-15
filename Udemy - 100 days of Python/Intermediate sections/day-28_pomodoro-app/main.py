@@ -1,6 +1,6 @@
 
 from tkinter import *
-# ---------------------------- CONSTANTS ------------------------------- #
+# ------------------------------------ CONSTANTS ----------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
 GREEN = "#9bdeac"
@@ -12,11 +12,13 @@ LONG_BREAK_MIN = 0.15
 WORK_SESSIONS_PER_BLOCK = 3
 BG_IMAGE = './Intermediate sections/day-28_pomodoro-app/tomato.png'
 
+# --------------------------------- GLOBAL VARIABLES --------------------------------- #
+reps = 0
+work_sessions_counter = ''
+running_timer = None
 
 # TODO: add countdown mechanism
 # ---------------------------------- TIMER MECHANISM --------------------------------- #
-reps = 0
-work_sessions_counter = None
 
 def start_timer():
     '''This function starts a pomodoro timer, taking the session times from theprogram constants WORK_MIN, SHORT_BREAK_MIN and LONG_BREAK_MIN.
@@ -61,7 +63,8 @@ def countdown(seconds):
 
     #if seconds is greater than 0, call this function again after one second, passing (seconds - 1) as argument
     if seconds > 0:
-        window.after(1000, countdown, seconds - 1)
+        global running_timer
+        running_timer = window.after(1000, countdown, seconds - 1)
     else:
         # check if the session that just ended was a work session
         if reps % 2 != 0:
@@ -73,7 +76,22 @@ def countdown(seconds):
         #start timer again
         start_timer()
 
-# ------------------------------------- UI SETUP ------------------------------------- #
+# ------------------------------------- RESET MECHANISM ---------------------------------- #
+# TODO: add functionality to reset the whole application when clicking the reset button
+def reset_app():
+    # cancel running timer
+    window.after_cancel(running_timer)
+    # get all global variables back to values on launch
+    global reps
+    global work_sessions_counter
+    reps = 0
+    work_sessions_counter = ''
+    # set screen element back to state on lanch
+    canvas.itemconfig(timer_text, text='00:00')
+    session_label.config(text='Press Start', fg=GREEN)
+    work_sessions_counter_label.config(text=work_sessions_counter)
+    
+    # ------------------------------------- UI SETUP ------------------------------------- #
 
 # TODO: set up UI with:
 window = Tk()
@@ -96,7 +114,7 @@ timer_text = canvas.create_text(102, 130, text="00:00", fill='white', font=(FONT
 
 # start and reset buttons
 start_button = Button(text='start', command=start_timer)
-reset_button = Button(text='reset')
+reset_button = Button(text='reset', command=reset_app)
 
 # work sessions counter (checkmarks)
 work_sessions_counter_label = Label(text=work_sessions_counter, font=(FONT_NAME, 20, "normal"), fg=GREEN, bg=YELLOW, pady=20)
@@ -110,10 +128,3 @@ work_sessions_counter_label.grid(row=3, column=1)
 
 
 window.mainloop()
-
-
-
-# TODO: reset the work sessions counter when the block reaches a number of work sessions
-# (pomodoro applies blocks with 4 work sessions, but here it can be customized)
-
-# TODO: add functionality to reset the whole application when clicking the reset button
