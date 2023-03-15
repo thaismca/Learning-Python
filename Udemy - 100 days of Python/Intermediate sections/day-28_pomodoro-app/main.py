@@ -6,20 +6,45 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 25
-WORK_SESSIONS_PER_BLOCK = 4
-SHORT_BREAK_MIN = 5
-LONG_BREAK_MIN = 20
+WORK_MIN = 0.2
+SHORT_BREAK_MIN = 0.1
+LONG_BREAK_MIN = 0.2
+WORK_SESSIONS_PER_BLOCK = 3
 BG_IMAGE = './Intermediate sections/day-28_pomodoro-app/tomato.png'
 
 
 # TODO: add countdown mechanism
 # ---------------------------------- TIMER MECHANISM --------------------------------- #
-def start_timer(min=0, sec=0):
-    '''This function takes a number of minutes and seconds, calculates the number of seconds in these minutes and seconds,
-    and starts a countdown passing the number of total seconds'''
-    total_seconds = (min * 60) + sec
-    countdown(total_seconds)
+reps = 0
+def start_timer():
+    '''This function starts a pomodoro timer, taking the session times from theprogram constants WORK_MIN, SHORT_BREAK_MIN and LONG_BREAK_MIN.
+    It runs a certain number of work sessions, defined in WORK_SESSIONS_PER_BLOCK, before entering a long break.'''
+    # TODO: set different timer sessions and values
+    work_sec = WORK_MIN * 60
+    short_break_sec = SHORT_BREAK_MIN * 60
+    long_break_sec = LONG_BREAK_MIN * 60
+    global reps
+    reps += 1
+
+    # reps matches a multiple of (WORK_SESSIONS_PER_BLOCK * 2) -> end of a block = long break
+    if reps % (WORK_SESSIONS_PER_BLOCK * 2) == 0:
+        # start long break session timer and show "BREAK" label
+        countdown(long_break_sec)
+        session_label.config(text="BREAK")
+    
+    # reps doen not match a multiple of (WORK_SESSIONS_PER_BLOCK * 2) -> not the end of a block
+    else:
+        # odd means work
+        if reps % 2 != 0:
+            # start work session timer and show "work" label
+            countdown(work_sec)
+            session_label.config(text="WORK")
+        # even means break
+        else:
+            #start long break session timer and show "break" label
+            countdown(short_break_sec)
+            session_label.config(text="SHORT BREAK")
+    
 
 
 # -------------------------------- COUNTDOWN MECHANISM ------------------------------- #
@@ -35,6 +60,8 @@ def countdown(seconds):
     #if seconds is greater than 0, call this function again after one second, passing (seconds - 1) as argument
     if seconds > 0:
         window.after(1000, countdown, seconds - 1)
+    else:
+        start_timer()
 
 
 # ------------------------------------- UI SETUP ------------------------------------- #
@@ -59,7 +86,7 @@ canvas.create_image(102, 112, image=tomato_image)
 timer_text = canvas.create_text(102, 130, text="00:00", fill='white', font=(FONT_NAME, 24, 'bold'))
 
 # start and reset buttons
-start_button = Button(text='start')
+start_button = Button(text='start', command=start_timer)
 reset_button = Button(text='reset')
 
 # work sessions counter (checkmarks)
@@ -72,13 +99,9 @@ start_button.grid(row=2, column=0)
 reset_button.grid(row=2, column=2)
 sessions_counter_label.grid(row=3, column=1)
 
-# testing countdown behaviour
-start_timer(0, 15)
 
 window.mainloop()
 
-
-# TODO: set different timer sessions and values
 
 # TODO: display checkmarks when each work session is done
 # TODO: reset the work sessions counter when the block reaches a number of work sessions
