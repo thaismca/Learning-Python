@@ -7,9 +7,10 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-BG_IMAGE = './Intermediate sections/day-28_pomodoro-app/tomato.png'
+BG_IMAGE = 'tomato.png'
 
 # ------------------------------------- SETTINGS ------------------------------------- #
+# get a reference to Settings
 settings = Settings()
 
 # --------------------------------- GLOBAL VARIABLES --------------------------------- #
@@ -19,12 +20,12 @@ running_timer = None
 
 # ---------------------------------- TIMER MECHANISM --------------------------------- #
 def start_timer():
-    '''This function starts a pomodoro timer, taking the session times from th eprogram constants work_min, short_break_min and long_break_min.
+    '''This function starts a pomodoro timer, taking the session times from the program settings.
     It runs a certain number of work sessions, defined in work_sessions_block, before entering a long break.'''
     # disable the start and settings buttons, so they cannot be clicked when there's a timer running
     start_button.config(state='disabled')
     settings_button.config(state='disabled')
-    # set different timer sessions and values -> based on app constants
+    # set different timer sessions and values -> based on settings attributes
     work_sec = settings.work_min * 60
     short_break_sec = settings.short_break_min * 60
     long_break_sec = settings.long_break_min * 60
@@ -79,6 +80,8 @@ def countdown(seconds):
         start_timer()
         
 
+
+# ------------------------------- WINDOW POP UP BEHAVIOUR ------------------------------- #
 def pop_up_window():
     '''This function makes the app emit a sound notification, opens the app window if it's currently minimized,
     and brings the app window to the front.'''
@@ -99,19 +102,12 @@ def reset_app():
     global work_sessions_counter
     reps = 0
     work_sessions_counter = ''
-    # set screen element back to state on lanch
+    # set screen elements back to their state on launch
     canvas.itemconfig(timer_text, text='00:00')
     session_label.config(text='click start', fg=GREEN)
     work_sessions_counter_label.config(text=work_sessions_counter)
     start_button.config(state='normal')
     settings_button.config(state='normal')
-    
-
-
-# ------------------------------------- CAHNGE SETTINGS ---------------------------------- #
-def change_settings():
-    '''This function resets the whole application.'''
-    settings.dialog_get_user_input(window)
     
     
 
@@ -138,7 +134,7 @@ start_button = Button(text='start', command=start_timer)
 reset_button = Button(text='reset', command=reset_app)
 
 #change settings button
-settings_button = Button(text='settings', command=change_settings)
+settings_button = Button(text='settings', command=settings.dialog_get_user_input(window))
 
 # work sessions counter (checkmarks)
 work_sessions_counter_label = Label(text=work_sessions_counter, font=(FONT_NAME, 20, "normal"), fg=GREEN, bg=YELLOW, pady=20)

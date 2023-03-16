@@ -2,6 +2,7 @@ from tkinter import *
 import math
 
 class Settings():
+    '''Models the settings that can be customized by the user. Initially holds values corresponding to a standard pomodoro protocol.'''
     def __init__(self):
         self.work_min = 25
         self.short_break_min = 5
@@ -10,6 +11,7 @@ class Settings():
 
 
     def dialog_get_user_input(self, parent):
+        '''Displays a toplevel widget (relatively on top of parent), where the user can change the settings for the pomodoro timers.'''
         # create top level widget
         top = self.top = Toplevel(parent)
         top.attributes('-topmost',True)
@@ -28,20 +30,25 @@ class Settings():
         self.short_break_value.set(self.short_break_min)
         self.short_break_input = Spinbox(top, textvariable=self.short_break_value, from_=1, to=100, width=5).grid(row=2, column=1, padx=5)
 
+        # long break period
         Label(top, text="Long break minutes").grid(row=3, column=0)
         self.long_break_value = IntVar()
         self.long_break_value.set(self.long_break_min)
         self.long_break_input = Spinbox(top, textvariable=self.long_break_value, from_=1, to=100, width=5).grid(row=3, column=1, padx=5)
 
+        # work session per block
         Label(top, text="Work sessions per block").grid(row=4, column=0)
         self.work_sessions_block_value = IntVar()
         self.work_sessions_block_value.set(self.work_sessions_block)
         self.work_sessions_block_input = Spinbox(top, textvariable=self.work_sessions_block_value, from_=1, to=100, width=5).grid(row=4, column=1, padx=5)
 
+        # submit settings button
         Button(top, text="OK", command=self.submit_settings).grid(row=5, column=1, pady=5)
 
 
     def submit_settings(self):
+        '''Function that is triggered when the button to submit the settings is clicked.
+        It changes the settings attributes to the values entered by the user in the pop up widget.'''
         self.work_min = int(self.work_min_value.get())
         self.short_break_min = int(self.short_break_value.get())
         self.long_break_min = int(self.long_break_value.get())
