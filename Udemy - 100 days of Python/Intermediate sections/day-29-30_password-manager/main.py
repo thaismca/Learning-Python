@@ -12,18 +12,39 @@
 # implement behaviour for save button in the confirmation pop up -> save data to a data file and clear the form in the main window 
 
 from tkinter import *
+from tkinter import messagebox
 
 LOGO_IMAGE = 'logo.png'
 
+
 # ---------------------------- SAVE PASSWORD ------------------------------ #
-def save_password():
-    '''Saves the data entered in the password manager form to a data.txt file.
-    The entries in the data.txt file will be sorted alphabetically.'''
-    # get data from inputs
+def submit_entries():
+    '''Get the values from the form entries and check if they are not empty.
+     If any entry is empty, displays error message. If no empty entries, display save confirmation.'''
     website = website_entry.get()
     username = username_entry.get()
     password = password_entry.get()
 
+    if website.strip() == '' or username.strip() == '' or password.strip() == '':
+        messagebox.showerror(title='Error', message="Please make sure you haven't left any fields empty!")
+    else:
+        confirm_save(website, username, password)
+
+
+
+def confirm_save(website, username, password):
+    '''Displays a message to confirm save containing the data submit in the form so user can confer. Saves the data only if user clicks 'yes'.'''
+    confirm_message = f"Website: {website}\nUsername/Email: {username}\nPassword: {password}\n\nConfirm save?"
+    confirmation = messagebox.askyesno(title='Confirm save', message=confirm_message)
+    if confirmation:
+        save_password(website, username, password)
+        clear_form_entries()
+
+
+
+def save_password(website, username, password):
+    '''Saves the data entered in the password manager form to a data.txt file.
+    The entries in the data.txt file will be sorted alphabetically.'''
     # form the new data entry
     new_data = f"{website} | {username} | {password}\n"
     
@@ -42,11 +63,20 @@ def save_password():
     # overwrite the file with the updated list
     with open("data.txt", "w") as file:
         file.writelines(data_list)
+
+
+
+def clear_form_entries():
+    website_entry.delete(0, END)
+    username_entry.delete(0,END)
+    password_entry.delete(0, END)
         
+
 
 # ------------------------------ UI SETUP --------------------------------- #
 # create a window where the program will run
 window = Tk()
+window.title('Password Manager')
 window.config(padx=30, pady=30)
 
 # add logo image
@@ -79,7 +109,7 @@ gen_password_button = Button(text='Generate Password')
 gen_password_button.grid(row=3, column=2, sticky="EW")
 
 # add -> submit
-add_button = Button(text='Add', width=35, command=save_password)
+add_button = Button(text='Add', width=35, command=submit_entries)
 add_button.grid(row=4, column=1, columnspan=2, sticky="EW")
 
 
