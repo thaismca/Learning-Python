@@ -32,6 +32,7 @@ def confirm_save(website, username, password):
         clear_form_entries()
 
 
+
 import json
 def save_password(website, username, password):
     '''Saves the data entered in the password manager form to a data.json file.'''
@@ -55,7 +56,25 @@ def save_password(website, username, password):
             json.dump(new_data, file, indent=4)
 
     else:
-        # could read from a data.json file -> update old data with new_data
+        # could read from a data.json file 
+
+        # check for pre existing data for that website
+        if website in data_dict:
+            # found website in data_dict
+            username = data_dict[website]['username']
+            password = data_dict[website]['password']
+            # check if user wants to overwrite exisitng data
+            overwrite = messagebox.askyesno(title='Warning', message=f"There's already an username and password saved for {website}!"
+                                f"\nUsername: {username}\nPassword: {password}\n\nDo you want to overwrite the existing data?")
+            if overwrite:
+                # user wants to overwrite -> replace existing data
+                data_dict[website]['username'] = username
+                data_dict[website]['password'] = password
+            else:
+                # user doesn't want to overwrite -> return fro function without saving any new data
+                return
+
+        # update old data with new_data
         data_dict.update(new_data)
         # open file in write mode -> write the updated data to the file
         with open("data.json", "w") as file:
