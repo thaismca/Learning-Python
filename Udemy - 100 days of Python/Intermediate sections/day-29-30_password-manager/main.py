@@ -32,28 +32,34 @@ def confirm_save(website, username, password):
         clear_form_entries()
 
 
-
+import json
 def save_password(website, username, password):
-    '''Saves the data entered in the password manager form to a data.txt file.
-    The entries in the data.txt file will be sorted alphabetically.'''
-    # form the new data entry
-    new_data = f"{website} | {username} | {password}\n"
+    '''Saves the data entered in the password manager form to a data.json file.'''
+    # create a dictionary for the new data
+    new_data = {
+        website: {
+            "username": username,
+            "password": password
+        }
+    }
     
-    data_list = []
     try:
         # try to open an existing data file and read data from it
-        with open("data.txt", "r") as file:
-            data_list = file.readlines()
-    except:
-        pass
+        with open("data.json", "r") as file:
+            # read old data to a data_dict variable
+            data_dict = json.load(file)
     
-    # add the new data to the existing list
-    data_list.append(new_data)
-    data_list.sort()
+    except FileNotFoundError:
+        # if file does not exist create a file and write the only new_data to it
+        with open("data.json", "w") as file:
+            json.dump(new_data, file, indent=4)
 
-    # overwrite the file with the updated list
-    with open("data.txt", "w") as file:
-        file.writelines(data_list)
+    else:
+        # could read from a data.json file -> update old data with new_data
+        data_dict.update(new_data)
+        # open file in write mode -> write the updated data to the file
+        with open("data.json", "w") as file:
+            json.dump(data_dict, file, indent=4)
 
 
 
