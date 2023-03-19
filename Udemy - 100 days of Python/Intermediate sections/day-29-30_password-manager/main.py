@@ -8,11 +8,11 @@ LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 SYMBOLS = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-# ---------------------------- SAVE PASSWORD ------------------------------ #
+# ----------------------------- SAVE PASSWORD ------------------------------- #
 def submit_entries():
     '''Get the values from the form entries and check if they are not empty.
      If any entry is empty, displays error message. If no empty entries, display save confirmation.'''
-    website = website_entry.get()
+    website = website_entry.get().capitalize()
     username = username_entry.get()
     password = password_entry.get()
 
@@ -70,7 +70,7 @@ def clear_form_entries():
         
 
 
-# -------------------------- PASSWORD GENERATOR --------------------------- #
+# --------------------------- PASSWORD GENERATOR ---------------------------- #
 from random import randint, choice, shuffle
 import pyperclip
 def generate_password():
@@ -91,7 +91,41 @@ def generate_password():
 
 
 
-# ------------------------------ UI SETUP --------------------------------- #
+# ---------------------------- SEARCH PASSWORD ------------------------------ #
+def search_data_for_website():
+    '''Searches username and password data for a website that the user enters in the website entry.'''
+    # get a reference to the website entered by the user
+    website = website_entry.get().capitalize()
+
+    # get a reference to a dictionary containing the existing data saved for this user
+    try:
+     # try to open an existing data file and read data from it
+        with open("data.json", "r") as file:
+            # read old data to a data_dict variable
+            data_dict = json.load(file)
+    
+    except FileNotFoundError:
+        # if file does not exist -> show messagebox with appropriated error message
+        messagebox.showerror(title='Error', message="No data file found!\n\nThere are no saved passwords.")
+
+    else:
+        # could read from a data.json file -> try to find the website in the keys
+        if website in data_dict:
+            # found website in data_dict
+            username = data_dict[website]['username']
+            password = data_dict[website]['password']
+
+            # show messagebox with the respective username and password data
+            messagebox.showinfo(title=website, message=f'Username: {username}\nPassword: {password}\n\nPassword copied to clipboard')
+            # copy password to clipboard
+            pyperclip.copy(password)
+        else:
+            # cannot find website in data_dict -> show messagebox with appropriated error message
+            messagebox.showerror(title='Error', message=f"No exising data for the website {website}!")
+        
+
+
+# -------------------------------- UI SETUP --------------------------------- #
 # create a window where the program will run
 window = Tk()
 window.title('Password Manager')
@@ -109,6 +143,10 @@ website_entry = Entry()
 website_entry.focus()
 website_label.grid(row=1, column=0)
 website_entry.grid(row=1, column=1, columnspan=2, sticky="EW")
+
+# search button
+add_button = Button(text='Search', command=search_data_for_website)
+add_button.grid(row=1, column=2, sticky="EW")
 
 # username
 username_label = Label(text='Email/Username:', pady=5)
