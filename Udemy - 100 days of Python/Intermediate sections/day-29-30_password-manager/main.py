@@ -105,7 +105,8 @@ def generate_password():
 
     password = ''.join(password_list)
 
-    # display generated password in password entry
+    # display generated password in password entry (clear input first)
+    password_entry.delete(0, END)
     password_entry.insert(0, password)
     # copy generated password to clipboard
     pyperclip.copy(password)
