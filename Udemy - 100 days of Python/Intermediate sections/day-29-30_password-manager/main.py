@@ -3,6 +3,7 @@
 from tkinter import *
 from tkinter import messagebox
 
+# ------------------------------- CONSTANTS --------------------------------- #
 LOGO_IMAGE = 'logo.png'
 LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -12,7 +13,9 @@ SYMBOLS = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 def submit_entries():
     '''Get the values from the form entries and check if they are not empty.
      If any entry is empty, displays error message. If no empty entries, display save confirmation.'''
-    website = website_entry.get().capitalize()
+    # title case website and make sure that there are no more than one space between words
+    website = website_entry.get().title()
+    website = " ".join(website.split())
     username = username_entry.get()
     password = password_entry.get()
 
@@ -57,21 +60,20 @@ def save_password(website, username, password):
 
     else:
         # could read from a data.json file 
-
         # check for pre existing data for that website
         if website in data_dict:
             # found website in data_dict
-            username = data_dict[website]['username']
-            password = data_dict[website]['password']
-            # check if user wants to overwrite exisitng data
+            existing_username = data_dict[website]['username']
+            existing_password = data_dict[website]['password']
+            # check if user wants to overwrite existing data
             overwrite = messagebox.askyesno(title='Warning', message=f"There's already an username and password saved for {website}!"
-                                f"\nUsername: {username}\nPassword: {password}\n\nDo you want to overwrite the existing data?")
+                                f"\nUsername: {existing_username}\nPassword: {existing_password}\n\nDo you want to overwrite the existing data?")
             if overwrite:
                 # user wants to overwrite -> replace existing data
                 data_dict[website]['username'] = username
                 data_dict[website]['password'] = password
             else:
-                # user doesn't want to overwrite -> return fro function without saving any new data
+                # user doesn't want to overwrite -> return from function without saving any new data
                 return
 
         # update old data with new_data
@@ -110,37 +112,44 @@ def generate_password():
 
 
 
-# ---------------------------- SEARCH PASSWORD ------------------------------ #
+# ----------------------- SEARCH AUTHENTICATION DATA ------------------------ #
 def search_data_for_website():
     '''Searches username and password data for a website that the user enters in the website entry.'''
     # get a reference to the website entered by the user
-    website = website_entry.get().capitalize()
+    # title case website and make sure that there are no more than one space between words
+    website = website_entry.get().title()
+    website = " ".join(website.split())
 
-    # get a reference to a dictionary containing the existing data saved for this user
-    try:
-     # try to open an existing data file and read data from it
-        with open("data.json", "r") as file:
-            # read old data to a data_dict variable
-            data_dict = json.load(file)
-    
-    except FileNotFoundError:
-        # if file does not exist -> show messagebox with appropriated error message
-        messagebox.showerror(title='Error', message="No data file found!\n\nThere are no saved passwords.")
+    # check for empty input
+    if len(website.strip()) <= 0:
+        messagebox.showerror(title='Error', message=f"Please enter a website!")
 
     else:
-        # could read from a data.json file -> try to find the website in the keys
-        if website in data_dict:
-            # found website in data_dict
-            username = data_dict[website]['username']
-            password = data_dict[website]['password']
+        # get a reference to a dictionary containing the existing data saved for this user
+        try:
+        # try to open an existing data file and read data from it
+            with open("data.json", "r") as file:
+                # read old data to a data_dict variable
+                data_dict = json.load(file)
+        
+        except FileNotFoundError:
+            # if file does not exist -> show messagebox with appropriated error message
+            messagebox.showerror(title='Error', message="No data file found!\n\nThere are no saved passwords.")
 
-            # show messagebox with the respective username and password data
-            messagebox.showinfo(title=website, message=f'Username: {username}\nPassword: {password}\n\nPassword copied to clipboard')
-            # copy password to clipboard
-            pyperclip.copy(password)
         else:
-            # cannot find website in data_dict -> show messagebox with appropriated error message
-            messagebox.showerror(title='Error', message=f"No exising data for the website {website}!")
+            # could read from a data.json file -> try to find the website in the keys
+            if website in data_dict:
+                # found website in data_dict
+                username = data_dict[website]['username']
+                password = data_dict[website]['password']
+
+                # show messagebox with the respective username and password data
+                messagebox.showinfo(title=website, message=f'Username: {username}\nPassword: {password}\n\nPassword copied to clipboard')
+                # copy password to clipboard
+                pyperclip.copy(password)
+            else:
+                # cannot find website in data_dict -> show messagebox with appropriated error message
+                messagebox.showerror(title='Error', message=f"No exising data for the website {website}!")
         
 
 
@@ -164,8 +173,8 @@ website_label.grid(row=1, column=0)
 website_entry.grid(row=1, column=1, columnspan=2, sticky="EW")
 
 # search button
-add_button = Button(text='Search', command=search_data_for_website)
-add_button.grid(row=1, column=2, sticky="EW")
+search_button = Button(text='Search', command=search_data_for_website)
+search_button.grid(row=1, column=2, sticky="EW")
 
 # username
 username_label = Label(text='Email/Username:', pady=5)
