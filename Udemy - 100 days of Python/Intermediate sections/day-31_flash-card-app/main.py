@@ -1,9 +1,46 @@
 # ----- FLASH CARD APP ----- #
 
+# -------------------- CONSTANTS -------------------- #
+# -- BACKGROUNDS
+BG_COLOR = '#B1DDC6'
+CARD_FRONT_IMG = './images/card_front.png'
+CARD_BACK_IMG = './images/card_back.png'
+RIGHT_BUTTON_IMG = './images/right.png'
+WRONG_BUTTON_IMG = './images/wrong.png'
+
+# -- FONTS
+LANGUAGE_LABEL_FONT = ('Arial', 30, 'italic')
+WORD_LABEL_FONT = ('Arial', 60, 'bold')
+
+
+# -------------------- UI SETUP --------------------- #
 # TODO: create UI using Tkinter
+from tkinter import *
 # create window
+window = Tk()
+window.title('Flash Card App')
+window.config(bg=BG_COLOR, padx=50, pady=50)
+
 # create card with bg image, one label for the language name, and one label for the word
+card = Canvas(width=800, height=526, bg=BG_COLOR, highlightthickness=0)
+card_front_bg = PhotoImage(file=CARD_FRONT_IMG)
+card.create_image(400, 263, image=card_front_bg)
+card.create_text(400, 150, text='Language', font=LANGUAGE_LABEL_FONT)
+card.create_text(400, 263, text='Word', font=WORD_LABEL_FONT)
+card.grid(row=0, column=0, columnspan=2)
+
 # create the buttons for right and wrong answer
+right_img = PhotoImage(file=RIGHT_BUTTON_IMG)
+right_button = Button(image=right_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR)
+right_button.grid(row=1, column=0)
+
+wrong_img = PhotoImage(file=WRONG_BUTTON_IMG)
+wrong_button = Button(image=wrong_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR)
+wrong_button.grid(row=1, column=1)
+
+
+window.mainloop()
+
 
 # TODO: create new flash cards
 # read from the csv file to dataframe
