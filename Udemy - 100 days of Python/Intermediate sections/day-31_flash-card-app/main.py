@@ -14,6 +14,7 @@ WORD_LABEL_FONT = ('Arial', 60, 'bold')
 
 # -- DATA FILE
 DATA_FILE = './data/french_words.csv'
+SAVE_FILE = './data/words_to_learn.csv'
 
 # -- SETTINGS
 FLIP_DELAY = 3000
@@ -26,13 +27,14 @@ languages = []
 
 
 # ----------------- READ APP DATA ------------------ #
+import csv
+
 def read_app_data(file):
-    from csv import DictReader
     # read from the csv file to dictionary
     with open(file, mode='r', encoding='utf-8-sig') as data_file:
         global words_to_learn
         global languages
-        words_to_learn = list(DictReader(data_file))
+        words_to_learn = list(csv.DictReader(data_file))
         # get a reference to the name of the languages
         languages = [language for language in words_to_learn[0].keys()]
     
@@ -40,7 +42,7 @@ def read_app_data(file):
 
 # -------------- GENERATE / FLIP CARDS -------------- #
 import random
-def generate_card(dict_list):
+def generate_card():
     '''Receives a list of dictionaties, where each dictionary has a word in two different languages in the format
     {language1: word, language2:translation}. It selects a random dictionary in the list and generates the front of a flash card.
     Calls flip_card to show the back of the card after the amount of time defined in the FLIP_DELAY constant.'''
@@ -50,11 +52,13 @@ def generate_card(dict_list):
     except:
         pass
 
-    # tap into the global variables for selected card and languages
+    # tap into the global variables for list of words to learn, selected card and languages
+    global words_to_learn
     global selected_card
     global languages
+    print(len(words_to_learn))
     # get a random dict from the list and assign it to the global selected_card
-    selected_card = random.choice(dict_list)
+    selected_card = random.choice(words_to_learn)
     # change card_language text with the first language in the languages list
     card.itemconfig(card_language, text=languages[0], fill='#000')
     # change card_word text to the value in selected_card at the key that corresponds to the first language in the languages list
@@ -88,6 +92,36 @@ def flip_card():
 
 
 
+# ------------------ SAVE PROGRESS ------------------ #
+# TODO: save progress
+# remove word from list of words that might come up, if right button is pressed
+def is_known_word():
+    '''Removes current selected card from the list of words to know before rendering the next card.
+    Called when the user clicks the right_button.'''
+    # tap into the global variables for list of words to learn and selected card
+    global words_to_learn
+    global selected_card
+    # remove the value that corresponds to the selected card from the list of words to learn
+    words_to_learn.remove(selected_card)
+    # generate next card 
+    generate_card()
+
+
+
+# save filtered list of words in a words_to_learn.csv file
+def save_progress_on_close():
+    '''Saves the current list of words to know to a save file and closes the app. Called when the user clicks to close the app'''
+    global words_to_learn
+    global languages
+    with open(SAVE_FILE, 'w', newline='', encoding='utf-8-sig') as save_file:
+        save_data = csv.DictWriter(save_file, fieldnames=[languages[0], languages[1]])
+        save_data.writeheader()
+        save_data.writerows(words_to_learn)
+    
+    window.destroy()
+
+
+
 # -------------------- UI SETUP --------------------- #
 # TODO: create UI using Tkinter
 from tkinter import *
@@ -110,23 +144,22 @@ card.grid(row=0, column=0, columnspan=2)
 
 # create the buttons for right and wrong answer
 right_img = PhotoImage(file=RIGHT_BUTTON_IMG)
-right_button = Button(image=right_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR, command= lambda: generate_card(words_to_learn))
+right_button = Button(image=right_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR, command=is_known_word)
 right_button.grid(row=1, column=0)
 
 wrong_img = PhotoImage(file=WRONG_BUTTON_IMG)
-wrong_button = Button(image=wrong_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR, command= lambda: generate_card(words_to_learn))
+wrong_button = Button(image=wrong_img, highlightthickness=0, relief=FLAT, bg=BG_COLOR, command=generate_card)
 wrong_button.grid(row=1, column=1)
 
 # generate first card
-generate_card(words_to_learn)
+generate_card()
 
+
+window.protocol("WM_DELETE_WINDOW", save_progress_on_close)
 window.mainloop()
 
 
 
-# TODO: save progress
-# remove word from list of words that might come up, if right button is pressed
-# save filtered list of words in a words_to_learn.csv file
 
 # TODO: check for progress when open the app
 # when the app is launched, check if there's a words_to_learn.csv and retrieve the list and read from this csv file to dataframe
