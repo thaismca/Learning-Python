@@ -26,10 +26,10 @@ languages = []
 
 
 # ----------------- READ APP DATA ------------------ #
-def read_app_data():
+def read_app_data(file):
     from csv import DictReader
     # read from the csv file to dictionary
-    with open(DATA_FILE, mode='r', encoding='utf-8-sig') as data_file:
+    with open(file, mode='r', encoding='utf-8-sig') as data_file:
         global words_to_learn
         global languages
         words_to_learn = list(DictReader(data_file))
@@ -37,12 +37,9 @@ def read_app_data():
         languages = [language for language in words_to_learn[0].keys()]
     
 
+
 # -------------- GENERATE / FLIP CARDS -------------- #
 import random
-# TODO: create new flash cards
-# create a card front with a random word in the first column
-# generate a new card every time a right or wrong button is pressed
-# show the front of the card whenever a new card is generated
 def generate_card(dict_list):
     '''Receives a list of dictionaties, where each dictionary has a word in two different languages in the format
     {language1: word, language2:translation}. It selects a random dictionary in the list and generates the front of a flash card.
@@ -52,13 +49,15 @@ def generate_card(dict_list):
         window.after_cancel(flip)
     except:
         pass
-    # select random word/translation dict
+
+    # tap into the global variables for selected card and languages
     global selected_card
     global languages
+    # get a random dict from the list and assign it to the global selected_card
     selected_card = random.choice(dict_list)
-    # change card label text for current language
+    # change card_language text with the first language in the languages list
     card.itemconfig(card_language, text=languages[0], fill='#000')
-    # change card label text for current language
+    # change card_word text to the value in selected_card at the key that corresponds to the first language in the languages list
     card.itemconfig(card_word, text=selected_card[languages[0]], fill='#000')
     # change card background image
     card.itemconfig(card_bg, image=card_front_bg)
@@ -66,26 +65,27 @@ def generate_card(dict_list):
     right_button.config(state='disabled')
     wrong_button.config(state='disabled')
 
-    flip = window.after(FLIP_DELAY, func= lambda: flip_card(selected_card))
+    #after a delay of FLIP_DELAY miliseconds, flip the card to display the back with the translation
+    flip = window.after(FLIP_DELAY, func=flip_card)
 
 
 
-# TODO: after a delay of n seconds, flip the card to display the back with the translation
-# change card bg image
-# change card language label
-# change card word label
-# change both labels fg color
-def flip_card(selected_card):
-    '''Shows the back of a flash card. Called by generate_card after some amount of time defined in the FLIP_DELAY constant.'''
-    # change card label text for current language
+def flip_card():
+    '''Shows the back of a flash card for the current selected card.
+    Called by generate_card after some amount of time defined in the FLIP_DELAY constant.'''
+    # tap into the global variables for selected card and languages
+    global selected_card
+    global languages
+    # change card_language text with the second language in the languages list
     card.itemconfig(card_language, text=languages[1], fill='#FFF')
-    # change card label text for current language
+    # change card_word text to the value in selected_card at the key that corresponds to the second language in the languages list
     card.itemconfig(card_word, text=selected_card[languages[1]], fill='#FFF')
     # change card backgroud image
     card.itemconfig(card_bg, image=card_back_bg)
     # enable buttons so they can be clicked while back of the card is being displayed
     right_button.config(state='normal')
     wrong_button.config(state='normal')
+
 
 
 # -------------------- UI SETUP --------------------- #
@@ -97,7 +97,7 @@ window.title('Flash Card App')
 window.config(bg=BG_COLOR, padx=50, pady=50)
 
 # read app data
-read_app_data()
+read_app_data(DATA_FILE)
 
 # create card with bg image, one label for the language name, and one label for the word
 card = Canvas(width=800, height=526, bg=BG_COLOR, highlightthickness=0)
