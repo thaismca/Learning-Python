@@ -1,0 +1,154 @@
+***FLASH CARD***
+
+Implemented as part of the capstone project from day 31 of the course 100 days of Python.
+All implementation was taken care of prior to watch the solution videos.
+
+Key differences:
+ - course solution only works with one hard coded language (french).
+ - course solution does not account for when app runs out of words to learn.
+
+-------------------------------
+
+USER GUIDE 
+
+This app implements a Flash Card app for learning languages.
+A flashcard or flash card (also known as an index card) is a card bearing information on both sides, which is intended to be used as an aid in memorization. In this application each flashcard bears a word in a given language on one side and its translation to English on the other.
+
+-> How this app works
+
+1. When app launches, user is prompted to choose a language from the list of options.
+
+2. After the language is chosen, the app displays the first card with a random word pulled from a list. This list can be either the full list of words that the app can provide, or the list of words that the user is still pending to check as memorized.
+
+3. The word is first displayed in the language that the user is trying to learn. This card will automatically flip to show the translation after a few seconds (standarized to 4 seconds).
+
+4. If the user guessed it right, they can click the green checkmark button to notify the app that this is a memorized word. This word will be removed from the list and won't be displayed again in the card, until player restarts the whole list.
+
+5. If player couldn't guess it right, they can click the red x-mark button to notify the app that this word was not yet memorized. This word will stay in the list and can be randomly selected to appear in the flash cards again.
+
+6. When the user closes the app, the progress is saved to a save file, containing only the words that are still pending to be marked as memorized by the user. Next time the app is opened and that same language is selected in the prompt, the program will load this file, instead of the one containing all possible words for that language.
+
+7. When player marks the last word of the list for a given language as memorized, they will be notified of their achievement and asked if they want to restart from scratch, to get even more practice.
+ 
+
+-------------------------------
+
+IMPLEMENTATION NOTES
+
+--> PROJECT STRUCTURE - FOLDERS AND FILES
+
+- data folder -> contains all data to run the program and must be organized as follows:
+  - each supported language must have a separated folder named with the exact name of the language in all lower case
+  - each supported language must have a csv file inside their respective folder, containing all the words that can possible come up for that language in the cards. This file must be named all_words.csv. It must contain two values separated by comma in each line: the first being the word in the language to learn, the second being its respective translation. First pair of values must be the name of the language to learn and  the language that the words are being translated to.
+  - when a save file is generated for a given language, it will be stored in the language's folder as words_to_learn.csv.
+
+NOTES:
+- failing to have the all_words.csv file for a given language will prevent the application to work when that language is selected.
+- currently files are being opened using utf-8-sig encoding. Be mindful if you want to work with languages that need a different type of encoding.
+
+
+- images folder -> contains all images used in the app
+
+
+--------
+--> CONSTANTS
+This section contains the program constants.
+
+# -- BACKGROUNDS
+BG_COLOR: background color applied to the main window
+CARD_FRONT_IMG: path of the image used as background for the front of the card
+CARD_BACK_IMG: path of the image used as background for the back of the card
+RIGHT_BUTTON_IMG: path of the image used as background for the green checkmark buton
+WRONG_BUTTON_IMG: path of the image used as background for the red x-mark buton
+
+# -- FONTS
+LANGUAGE_LABEL_FONT: font used to display the language name in the card
+WORD_LABEL_FONT: font used to display the word in the card
+
+# -- SETTINGS
+FLIP_DELAY: numer of miliseconds that the card will wait before flipping (standarized to 4000)
+LANGUAGES_TO_PRACTICE: list of available languages
+
+
+--------
+--> GLOBAL VARIABLES
+This section contains the program global variables
+
+- all_words_file: path for the file that contains all words that can come up for a given language
+- saved_progress_file: path for the file that contains the words that the user haven't checked as memorized for a given language
+- words_to_learn: a list of the current words to learn read from the csv file to a list of dictionaries
+- selected_card: the current selected set of word/translation from the words_to_learn list
+- current_languages: the languages that the current file works with (language to learn and the language that the words are being translated to in the answer side of the card.
+
+
+--------
+--> CHOOSE LANGUAGE
+This sections contains functions related to the functionality checks the language that the user wants to practice. Options are populated using the languages in LANGUAGES_TO_PRACTICE constant.
+
+-> choose_language_pop_up(root)
+Function that displays a pop up where the user can select a language to practice.
+
+-> confirm_save(website, username, password)
+Function that receives the website, username, password data parsed from the form in the submit_entries() function and displays a messagebox to confirm save containing the data submitted in the form so user can confer. Calls save_password passing the the parsed website, username, password as arguments, to save the data only if user clicks 'yes' in the messagebox. It also calls clear_form_entries, to clear the website, username and password inputs in the main window.
+
+
+-> set_language(language, pop_up)
+Function is called when the button in the pop up displayed to choose a language is clicked. It sets the path to reach the program files for the language that was selected and calls star_app to read either saved or base data from the corresponding language.
+
+NOTE: since the path is formed passing the value of the selected language in lower case, it's mandatory that the language folder name matches this resulting string.
+
+
+--------
+--> READ APP DATA
+This sections contains function taht reads data from a csv file to initialize the words_to_learn and languages global variables, in order to allow the program to start.
+
+
+-> start_app()
+Function that reads data from a save or base file and initializes words_to_learn and languages globals. Calls restart_words if there are no words to learn, or generate_card to show the first card if there are words to learn. Displays an error message if no file can be found.
+- It will first try to load a save. If the save does not exist, it will try to learn an all_words file.
+
+
+--------
+--> SAVE PROGRESS
+This sections contains functions related to the functionality that stores the current progress for the user at a given language.
+
+-> is_known_word()
+Function that is triggered when the user clicks the green checkmark to notify the program that the current word was memorized. It removes current selected card from the list of words to know before rendering the next card.
+
+-> save_progress_on_close()
+Function that is triggered when the user clicks to close the main window of the application. It saves the current list of words to know to a save file and closes the app.
+
+-> restart_words()
+Function that is called when user cheks all the words for that given language as memorized. Notifies the user that there's no new words to learn in the saved progress, and asks if they want to restart.
+- shows messabox asking if user wants to restart
+- if yes, delete save file with user's progress -> call start_app to load the app again and read from the base file, since save no longer exists
+- if no, show messabox to let user know that the app is being closed, since there are no further possible actions
+
+
+--------
+--> SAVE PROGRESS
+This sections contains functions related to the functionality that generates and flips the flash card
+
+-> generate_card()
+Function that selects a random dictionary in the list of words_to_know and generates the front of a flash card. Calls flip_card to show the back of the card after the amount of time defined in the FLIP_DELAY constant.
+
+-> flip_card()
+fucntion taht shows the back of a flash card for the current selected card. Called by generate_card after some amount of time defined in the FLIP_DELAY constant.
+ 
+--------
+--> UI SETUP
+This section has code that generates all main screen elements and place them on the screen
+
+ - window -> new top level widget, which will hold all the following elements and where the program will run
+ - card -> canvas widget that will hold the card elements
+ - card_bg -> canvas image that will hold either the front or back bg of the card
+ - card_language ->  canvas text that will hold the current language that is being displayed in the card
+ - card_word -> canvas text that will hold the current word or its translation
+ - right_button -> button that has a green checkmark, that will call is_known_word when clicked
+ - wrong_button -> button that has a red x-mark, that will call generate_card when clicked 
+
+
+# ----- ON PROGRAM START -> show pop up to select language
+choose_language_pop_up(window)
+
+ 
