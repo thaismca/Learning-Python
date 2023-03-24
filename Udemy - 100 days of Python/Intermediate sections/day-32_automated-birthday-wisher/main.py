@@ -1,7 +1,9 @@
 import smtplib
 import datetime as dt
 import pandas
+import random
 
+NUMBER_OF_TEMPLATES = 3
 # # name of the remote host to which to connect
 # host = 'smtp.gmail.com'
 # # sender's authentication data
@@ -34,13 +36,17 @@ birthdays_dict = {(row.day_of_birth, row.month_of_birth): {'email': row.email, '
 for birthdate in birthdays_dict:
     # check if the birthday matches today's date
     if birthdate == today:
-        print(birthdays_dict[birthdate])
+        # pick random template
+        message_index = random.randint(1, NUMBER_OF_TEMPLATES)
+        template_path = f'./message_templates/message_{message_index}.txt'
+        # generate personalized message
+        with open(template_path) as template:
+            message_template = template.read()
+            message_personalized = message_template.replace("[NAME]", birthdays_dict[birthdate]['name'])
+        
+        print(message_personalized)
 
 
-
-
-# TODO: pick random template and generate personalized message
-# if that date check returns true, pick a randon letter template and replace the [NAME] with the person's nickname from birthdays.csv
 
 # TODO: send the message to the person's email address
 # create SMTP object to handle connection with email provider's SMTP email server
