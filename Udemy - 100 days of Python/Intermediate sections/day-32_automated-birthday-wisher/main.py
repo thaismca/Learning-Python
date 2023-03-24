@@ -1,5 +1,6 @@
 import smtplib
 import datetime as dt
+import pandas
 
 # # name of the remote host to which to connect
 # host = 'smtp.gmail.com'
@@ -21,10 +22,22 @@ import datetime as dt
 #                     msg='Subject:Hello\n\nEmail message body here.')
 
 
-# TODO: check if today matches a birthday in the birthdays.csv
+
 # get a reference for today's day and month into a tuple
+now = dt.datetime.now()
+today = (now.day, now.month)
+
 # read data from birthdays.csv file
-# for each entry in the file, get a reference for day_of_birth and month_of_birth into a tuple and check agains today's date tuple
+birthdays_df = pandas.read_csv('birthdays.csv')
+birthdays_dict = {(row.day_of_birth, row.month_of_birth): {'email': row.email, 'name': row.nickname} for (index, row) in birthdays_df.iterrows()}
+
+for birthdate in birthdays_dict:
+    # check if the birthday matches today's date
+    if birthdate == today:
+        print(birthdays_dict[birthdate])
+
+
+
 
 # TODO: pick random template and generate personalized message
 # if that date check returns true, pick a randon letter template and replace the [NAME] with the person's nickname from birthdays.csv
