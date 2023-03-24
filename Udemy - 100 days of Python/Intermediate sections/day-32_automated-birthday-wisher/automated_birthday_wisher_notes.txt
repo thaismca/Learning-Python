@@ -16,3 +16,8 @@ The code implements an automated email sender that sends a personalized message 
 
 Key difference:
  - course solution won't work properly if there's more than one person with the same birthday, since it doesn't go through the list of all birthdays and then do the action if that birthday matches today's date. It simply does a check to see if today's date exists in the birthdays dictionary, which will make the last entry overwrite any other entry with matching birthdates. In this case, the email is only going to be sent to the last person in the list that has birthday in today's date.
+
+-----------------------------
+Side Practice
+
+The side practice code implements an automated email sender that sends a random motivation quote everyday to all emails in the list of recipients. The list of quotes is read from a csv file and one is randomly icked and sent in the email's message body.
