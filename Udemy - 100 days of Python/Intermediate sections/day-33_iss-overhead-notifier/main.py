@@ -1,6 +1,7 @@
 # ISS OVERHEAD NOTIFIER
 # This program notifies when the ISS is passing at a given latitude and longitude during nighttime
 import requests
+import datetime as dt
 
 # latitude and longitude
 MY_LAT = 49.282730
@@ -54,6 +55,12 @@ print(sunrise)
 print(sunset)
 
 # TODO: generate a tuple with the current hour and minutes
+now = dt.datetime.now()
+time_now = (now.hour, now.minute)
+
+print(time_now)
+
+
 # TODO: make a request to the ISS current location API and get references to the current ISS coordinates
 # TODO: check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
 # TODO: send an email to notify that ISS is currently overhead, if conditions above are met
