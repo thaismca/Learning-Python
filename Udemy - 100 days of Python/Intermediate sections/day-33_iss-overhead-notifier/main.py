@@ -3,6 +3,7 @@
 import requests
 import datetime as dt
 
+# ------------------------------------ CONSTANTS ------------------------------------ #
 # latitude and longitude
 MY_LAT = 49.282730
 MY_LONG = -123.120735
@@ -18,6 +19,9 @@ MAX_LONG = MY_LONG + VISIBILITY_RANGE if MY_LONG + VISIBILITY_RANGE < 180 else (
 MIN_LONG = MY_LONG - VISIBILITY_RANGE if MY_LONG - VISIBILITY_RANGE > -180 else (MY_LONG - VISIBILITY_RANGE + 180) +180
 
 
+
+# ---------------- FUNCTIONS TO CHECK CONDITIONS TO SEND NOTIFICATION --------------- #
+
 # TODO: check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
 def is_iss_overhead(iss_lat, iss_long):
     '''Receives ISS current latitude and longitude and returns true if the current ISS location is within the VISIBILITY_RANGE,
@@ -28,6 +32,7 @@ def is_iss_overhead(iss_lat, iss_long):
         return False
 
 
+
 def is_dark(curr_time, sunrise, sunset):
     '''Checks if current time is within the time frame between the hour after the sunset and the hour before the sunrise.'''
     if sunset < curr_time < 23 or 0 < curr_time < sunrise:
@@ -36,6 +41,8 @@ def is_dark(curr_time, sunrise, sunset):
         return False
         
 
+
+# ------------------ FUNCTIONS GET THE LOCAL HOUR FROM API RESPONSE ----------------- #
 
 # TODO: convert both sunrise and sunset to local time, considering the LOCAL_UTC_OFFSET
 def utc_to_local(utc_hour):
@@ -50,6 +57,7 @@ def utc_to_local(utc_hour):
     return utc_hour
 
 
+
 # TODO: get a reference to the hour for both sunrise and sunset times
 def get_local_hour(time):
     '''Receives a time string expressed following ISO 8601 and returns a tuple containing the local hour and minutes.'''
@@ -59,6 +67,8 @@ def get_local_hour(time):
     return local_hour
 
 
+
+# ---------------------------------- API REQUESTS ----------------------------------- #
 
 # TODO: make a request to the ISS current location API and get references to the current ISS coordinates
 # make a get request to Sunset and sunrise times API
@@ -70,9 +80,6 @@ data = response.json()
 # get references to ISS current latitude and longitude
 iss_lat = float(data["iss_position"]["latitude"])
 iss_long = float(data["iss_position"]["longitude"])
-
-print(iss_lat)
-print(iss_long)
 
 
 
@@ -96,16 +103,13 @@ data = response.json()
 sunrise = get_local_hour(data["results"]["sunrise"])
 sunset = get_local_hour(data["results"]["sunset"])
 
-print(sunrise)
-print(sunset)
+
+
+# ---------------------- CHECK CONDITIONS - SEND NOTIFICATION ----------------------- #
 
 # TODO: get a reference to the current hour
 now = dt.datetime.now()
 time_now = now.hour
-
-print(time_now)
-
-print(is_dark(time_now, sunrise, sunset))
 
 # TODO: send an email to notify that ISS is currently overhead, if conditions above are met
 # TODO: run this check repeatedly at a given interval
