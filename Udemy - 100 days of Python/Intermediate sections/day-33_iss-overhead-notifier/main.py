@@ -2,6 +2,7 @@
 # This program notifies when the ISS is passing at a given latitude and longitude during nighttime
 import requests
 import datetime as dt
+import smtplib
 
 # ------------------------------------ CONSTANTS ------------------------------------ #
 # latitude and longitude
@@ -17,6 +18,13 @@ MAX_LAT = MY_LAT + VISIBILITY_RANGE if MY_LAT + VISIBILITY_RANGE < 90 else (MY_L
 MIN_LAT = MY_LAT - VISIBILITY_RANGE if MY_LAT - VISIBILITY_RANGE > -90 else (MY_LAT - VISIBILITY_RANGE + 90) + 90
 MAX_LONG = MY_LONG + VISIBILITY_RANGE if MY_LONG + VISIBILITY_RANGE < 180 else (MY_LONG + VISIBILITY_RANGE - 180) -180
 MIN_LONG = MY_LONG - VISIBILITY_RANGE if MY_LONG - VISIBILITY_RANGE > -180 else (MY_LONG - VISIBILITY_RANGE + 180) +180
+
+# email notification -> fake data just for the commit (replace with actual data if you want to test)
+HOST = "smtp.gmail.com"
+PORT = 587
+SENDER_EMAIL = "testing@gmail.com"
+PASSWORD = "fakepassword"
+RECIPIENTS = ["test1@gmail.com", "test2@gmail.com"]
 
 
 
@@ -112,4 +120,14 @@ now = dt.datetime.now()
 time_now = now.hour
 
 # TODO: send an email to notify that ISS is currently overhead, if conditions above are met
+if is_dark() and is_iss_overhead():
+    connection = smtplib.SMTP(HOST, PORT)
+    connection.starttls()
+    connection.login(SENDER_EMAIL, PASSWORD)
+
+    for email in RECIPIENTS:
+        connection.sendmail(from_addr=SENDER_EMAIL,
+                 to_addrs= email,
+                 msg=f'Subject:ISS Overhead Notification\n\nLook up! 👆\nThe ISS is above you in the sky!')
+        
 # TODO: run this check repeatedly at a given interval
