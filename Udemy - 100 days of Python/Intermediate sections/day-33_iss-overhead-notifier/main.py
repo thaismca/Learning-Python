@@ -6,7 +6,59 @@ import datetime as dt
 # latitude and longitude
 MY_LAT = 49.282730
 MY_LONG = -123.120735
+# local utc offset
 LOCAL_UTC_OFFSET = -8
+# ISS visibility range
+VISIBILITY_RANGE = 5
+
+# calculating max and min for latitude and longitude considering MY_LAT, MY_LONG and VISIBILITY_RANGE
+MAX_LAT = MY_LAT + VISIBILITY_RANGE if MY_LAT + VISIBILITY_RANGE < 90 else (MY_LAT + VISIBILITY_RANGE - 90) - 90
+MIN_LAT = MY_LAT - VISIBILITY_RANGE if MY_LAT - VISIBILITY_RANGE > -90 else (MY_LAT - VISIBILITY_RANGE + 90) + 90
+MAX_LONG = MY_LONG + VISIBILITY_RANGE if MY_LONG + VISIBILITY_RANGE < 180 else (MY_LONG + VISIBILITY_RANGE - 180) -180
+MIN_LONG = MY_LONG - VISIBILITY_RANGE if MY_LONG - VISIBILITY_RANGE > -180 else (MY_LONG - VISIBILITY_RANGE + 180) +180
+
+
+# TODO: check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
+def is_iss_overhead(iss_lat, iss_long):
+    '''Receives ISS current latitude and longitude and returns true if the current ISS location is within the VISIBILITY_RANGE,
+    considering MY_LAT and MY_LONG as point of reference. It returns false if the ISS current location is not within this range.'''
+    if MIN_LAT <= iss_lat <= MAX_LAT and MIN_LONG <= iss_long <= MAX_LONG:
+        return True
+    else:
+        return False
+
+
+def is_dark(curr_time, sunrise, sunset):
+    '''Checks if current time is within the time frame between the hour after the sunset and the hour before the sunrise.'''
+    if sunset < curr_time < 23 or 0 < curr_time < sunrise:
+        return True
+    else:
+        return False
+        
+
+
+# TODO: convert both sunrise and sunset to local time, considering the LOCAL_UTC_OFFSET
+def utc_to_local(utc_hour):
+    '''Converts an integer that represents the UTC hour to the local hour, considering the LOCAL_UTC_OFFSET.'''
+    utc_hour += LOCAL_UTC_OFFSET
+    if LOCAL_UTC_OFFSET > 0:
+        if utc_hour > 23:
+            utc_hour -= 24
+    elif LOCAL_UTC_OFFSET < 0:
+        if utc_hour < 0:
+            utc_hour += 24
+    return utc_hour
+
+
+# TODO: get a reference to the hour for both sunrise and sunset times
+def get_local_hour(time):
+    '''Receives a time string expressed following ISO 8601 and returns a tuple containing the local hour and minutes.'''
+    utc_hour = int(time.split("T")[1].split(":")[0])
+    local_hour = utc_to_local(utc_hour)
+
+    return local_hour
+
+
 
 # TODO: make a request to the ISS current location API and get references to the current ISS coordinates
 # make a get request to Sunset and sunrise times API
@@ -23,6 +75,7 @@ print(iss_lat)
 print(iss_long)
 
 
+
 # TODO: make a get request to Sunset and sunrise times API and get references to both sunrise and sunset data from the JSON file
 # parameters object that will be passed to the get request made to Sunset and sunrise times API
 parameters = {
@@ -33,28 +86,6 @@ parameters = {
     "formatted": 0
 }
 
-# TODO: convert both sunrise and sunset to local time, considering the LOCAL_UTC_OFFSET
-def utc_to_local(utc_hour):
-    '''Converts an integer that represents the UTC hour to the local hour, considering the LOCAL_UTC_OFFSET.'''
-    utc_hour += LOCAL_UTC_OFFSET
-    if LOCAL_UTC_OFFSET > 0:
-        if utc_hour > 23:
-            utc_hour -= 24
-    elif LOCAL_UTC_OFFSET < 0:
-        if utc_hour < 0:
-            utc_hour += 24
-    return utc_hour
-
-# TODO: generate a tuple for both sunrise and sunset times, containing the local hour and minutes for each one of them
-def get_local_hour_minutes(time):
-    '''Receives a time string expressed following ISO 8601 and returns a tuple containing the local hour and minutes.'''
-    utc_hour = int(time.split("T")[1].split(":")[0])
-    local_hour = utc_to_local(utc_hour)
-    minutes = int(time.split("T")[1].split(":")[1])
-
-    return(local_hour, minutes)
-
-
 # make a get request to Sunset and sunrise times API
 response = requests.get('https://api.sunrise-sunset.org/json', params=parameters)
 # raise exception if no success
@@ -62,18 +93,19 @@ response.raise_for_status()
 # get a reference to the response data in JSON format
 data = response.json()
 # get references to both sunrise and sunset data from the JSON file
-sunrise = get_local_hour_minutes(data["results"]["sunrise"])
-sunset = get_local_hour_minutes(data["results"]["sunset"])
+sunrise = get_local_hour(data["results"]["sunrise"])
+sunset = get_local_hour(data["results"]["sunset"])
 
 print(sunrise)
 print(sunset)
 
-# TODO: generate a tuple with the current hour and minutes
+# TODO: get a reference to the current hour
 now = dt.datetime.now()
-time_now = (now.hour, now.minute)
+time_now = now.hour
 
 print(time_now)
 
-# TODO: check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
+print(is_dark(time_now, sunrise, sunset))
+
 # TODO: send an email to notify that ISS is currently overhead, if conditions above are met
 # TODO: run this check repeatedly at a given interval
