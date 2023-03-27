@@ -3,6 +3,7 @@
 import requests
 import datetime as dt
 import smtplib
+import time
 
 # ------------------------------------ CONSTANTS ------------------------------------ #
 # latitude and longitude
@@ -30,10 +31,13 @@ RECIPIENTS = ["test1@gmail.com", "test2@gmail.com"]
 
 # ---------------- FUNCTIONS TO CHECK CONDITIONS TO SEND NOTIFICATION --------------- #
 
-# TODO: check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
-def is_iss_overhead(iss_lat, iss_long):
+# check if the current ISS is close to my location considering MY_LAT and MY_LONG, and if it's currently dark
+def is_iss_overhead(iss_location):
     '''Receives ISS current latitude and longitude and returns true if the current ISS location is within the VISIBILITY_RANGE,
     considering MY_LAT and MY_LONG as point of reference. It returns false if the ISS current location is not within this range.'''
+    iss_lat = iss_location[0]
+    iss_long = iss_location[1]
+    print(iss_location)
     if MIN_LAT <= iss_lat <= MAX_LAT and MIN_LONG <= iss_long <= MAX_LONG:
         return True
     else:
@@ -50,9 +54,9 @@ def is_dark(curr_time, sunrise, sunset):
         
 
 
-# ------------------ FUNCTIONS GET THE LOCAL HOUR FROM API RESPONSE ----------------- #
+# ---------------- FUNCTIONS TO GET THE LOCAL HOUR FROM API RESPONSE ---------------- #
 
-# TODO: convert both sunrise and sunset to local time, considering the LOCAL_UTC_OFFSET
+# convert both sunrise and sunset to local time, considering the LOCAL_UTC_OFFSET
 def utc_to_local(utc_hour):
     '''Converts an integer that represents the UTC hour to the local hour, considering the LOCAL_UTC_OFFSET.'''
     utc_hour += LOCAL_UTC_OFFSET
@@ -66,7 +70,7 @@ def utc_to_local(utc_hour):
 
 
 
-# TODO: get a reference to the hour for both sunrise and sunset times
+# get a reference to the hour for both sunrise and sunset times
 def get_local_hour(time):
     '''Receives a time string expressed following ISO 8601 and returns a tuple containing the local hour and minutes.'''
     utc_hour = int(time.split("T")[1].split(":")[0])
@@ -76,22 +80,28 @@ def get_local_hour(time):
 
 
 
-# ---------------------------------- API REQUESTS ----------------------------------- #
+# --------------------- FUNCTION TO GET THE CURRENT ISS LOCATION -------------------- #
 
-# TODO: make a request to the ISS current location API and get references to the current ISS coordinates
-# make a get request to Sunset and sunrise times API
-response = requests.get("http://api.open-notify.org/iss-now.json")
-# raise exception if no success
-response.raise_for_status()
-# get a reference to the response data in JSON format
-data = response.json()
-# get references to ISS current latitude and longitude
-iss_lat = float(data["iss_position"]["latitude"])
-iss_long = float(data["iss_position"]["longitude"])
+# make a request to the ISS current location API and get references to the current ISS coordinates
+def get_iss_position():
+    '''Makes a request to the ISS current location API and get references to the current ISS coordinates'''
+    # make a get request to Sunset and sunrise times API
+    response = requests.get("http://api.open-notify.org/iss-now.json")
+    # raise exception if no success
+    response.raise_for_status()
+    # get a reference to the response data in JSON format
+    data = response.json()
+    # get references to ISS current latitude and longitude
+    iss_lat = float(data["iss_position"]["latitude"])
+    iss_long = float(data["iss_position"]["longitude"])
+
+    return (iss_lat, iss_long)
 
 
 
-# TODO: make a get request to Sunset and sunrise times API and get references to both sunrise and sunset data from the JSON file
+# ----------------------- GET LOCAL SUNRISE AND SUNSET TIMES ------------------------ #
+
+# make a get request to Sunset and sunrise times API and get references to both sunrise and sunset data from the JSON file
 # parameters object that will be passed to the get request made to Sunset and sunrise times API
 parameters = {
     # latitude and longitude in decimal degrees. Both are required.
@@ -115,19 +125,27 @@ sunset = get_local_hour(data["results"]["sunset"])
 
 # ---------------------- CHECK CONDITIONS - SEND NOTIFICATION ----------------------- #
 
-# TODO: get a reference to the current hour
-now = dt.datetime.now()
-time_now = now.hour
+# send an email to notify that ISS is currently overhead, if conditions above are met
+# run this check repeatedly at a given interval
+while True:
+    # get a reference to the current hour
+    curr_hour = dt.datetime.now().hour
+    
+    # if is currently dark and ISS is overhead
+    if is_dark(curr_hour, sunrise, sunset) and is_iss_overhead(get_iss_position()):
+        # send email to list of recipients
+        connection = smtplib.SMTP(HOST, PORT)
+        connection.starttls()
+        connection.login(SENDER_EMAIL, PASSWORD)
 
-# TODO: send an email to notify that ISS is currently overhead, if conditions above are met
-if is_dark() and is_iss_overhead():
-    connection = smtplib.SMTP(HOST, PORT)
-    connection.starttls()
-    connection.login(SENDER_EMAIL, PASSWORD)
-
-    for email in RECIPIENTS:
-        connection.sendmail(from_addr=SENDER_EMAIL,
-                 to_addrs= email,
-                 msg=f'Subject:ISS Overhead Notification\n\nLook up! 👆\nThe ISS is above you in the sky!')
+        for email in RECIPIENTS:
+            connection.sendmail(from_addr=SENDER_EMAIL,
+                    to_addrs= email,
+                    msg=f'Subject:ISS Overhead Notification\n\nLook up!\nThe ISS is above you in the sky!')
         
-# TODO: run this check repeatedly at a given interval
+        # once one email is sent, break from while loop -> avoid email spamming
+        break
+    
+    # wait 60 seconds to check conditions again
+    time.sleep(60)
+        
