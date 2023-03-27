@@ -72,7 +72,8 @@ def utc_to_local(utc_hour):
 
 # get a reference to the hour for both sunrise and sunset times
 def get_local_hour(time):
-    '''Receives a time string expressed following ISO 8601 and returns a tuple containing the local hour and minutes.'''
+    '''Receives a time string expressed following ISO 8601 (the format of the response from the Sunrise
+    and sunset times API) and returns and integer that represents the local hour.'''
     utc_hour = int(time.split("T")[1].split(":")[0])
     local_hour = utc_to_local(utc_hour)
 
@@ -107,7 +108,7 @@ parameters = {
     # latitude and longitude in decimal degrees. Both are required.
     "lat": MY_LAT,
     "lng": MY_LONG,
-    # time formatter -> set to one so we can have it expressed following ISO 8601
+    # time formatter -> set to 0 so we can have it expressed following ISO 8601
     "formatted": 0
 }
 
