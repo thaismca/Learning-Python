@@ -31,7 +31,7 @@ class QuizzInterface():
         self.window.config(background=BG_COLOR, padx=20, pady=20)
 
         # score label
-        self.score_label = Label(text="Score: 0", bg=BG_COLOR, fg=SCORE_FONT_COLOR, font=SCORE_FONT)
+        self.score_label = Label(text=f'Score: {self.quiz.score}', bg=BG_COLOR, fg=SCORE_FONT_COLOR, font=SCORE_FONT)
         self.score_label.grid(row=0, column=1, sticky="E")
 
         # question canvas
@@ -64,9 +64,10 @@ class QuizzInterface():
 
     def give_feedback(self, is_correct_answer: bool):
         '''Gives feedbck on the player's answer, by coloring the question card background with either green if player guessed it right,
-        or red if player guessed it wrong. It calls the next question after one second.'''
+        or red if player guessed it wrong. It also updates the score label and calls the next question after one second.'''
         if is_correct_answer:
             self.question_canvas.itemconfig(self.question_bg, fill=CORRECT_ANSWER_BG_COLOR)
+            self.score_label.config(text=f'Score: {self.quiz.score}')
         else:
             self.question_canvas.itemconfig(self.question_bg, fill=WRONG_ANSWER_BG_COLOR)
         self.window.after(1000, self.generate_next_question)

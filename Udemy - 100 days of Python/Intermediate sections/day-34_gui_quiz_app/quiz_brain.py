@@ -25,7 +25,7 @@ class QuizBrain:
         return self.question_number < len(self.question_list)
     
     def is_correct_answer(self, user_answer):
-        '''Returns True if user answer matches the current question crrect answer, and False if it doesn't.'''
+        '''Returns True if user answer matches the current question correct answer, and False if it doesn't.'''
         if  self.current_question.answer == user_answer:
             self.score += 1
             return True
