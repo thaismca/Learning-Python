@@ -22,7 +22,3 @@ for question in questions_data:
 quiz = QuizBrain(question_bank)
 # create an object from the QuizInterface class passing the quiz object from the class QuizBrain 
 quiz_ui = QuizzInterface(quiz)
-
-# no more questions, end game
-print("You completed the quiz!")
-print(f"Your final score was: {quiz.score}/{quiz.question_number}")

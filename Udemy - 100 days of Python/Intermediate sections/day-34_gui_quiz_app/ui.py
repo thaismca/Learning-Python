@@ -80,4 +80,6 @@ class QuizzInterface():
             next_question = self.quiz.next_question()
             self.question_canvas.itemconfig(self.question_text, text=next_question)
         else:
-            self.question_canvas.itemconfig(self.question_text, text='You completed the quiz!') 
+            self.question_canvas.itemconfig(self.question_text, text='You completed the quiz!')
+            self.true_button.config(state='disabled')
+            self.false_button.config(state='disabled')
