@@ -4,6 +4,7 @@
 from data import questions_data
 from question_model import Question
 from quiz_brain import QuizBrain
+from ui import QuizzInterface
 
 # create question bank
 question_bank = []
@@ -19,9 +20,8 @@ for question in questions_data:
 
 # create an object from the QuizBrain class using the question_bank list
 quiz = QuizBrain(question_bank)
-# while there are still questions available in the quiz, display next question
-while quiz.still_has_questions():
-    quiz.next_question()
+# create an object from the QuizInterface class passing the quiz object from the class QuizBrain 
+quiz_ui = QuizzInterface(quiz)
 
 # no more questions, end game
 print("You completed the quiz!")
