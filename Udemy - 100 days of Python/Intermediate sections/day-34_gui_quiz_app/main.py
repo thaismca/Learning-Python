@@ -12,9 +12,10 @@ question_bank = []
 for question in questions_data:
     # get references to the text and answer attributes for that question
     q_text = question['question']
+    q_category = question['category']
     q_answer = question['correct_answer']
     # create an object from the class Question using the text and answer attributes
-    new_question = Question(q_text, q_answer)
+    new_question = Question(q_text, q_category, q_answer)
     # append this object to the question_bank list
     question_bank.append(new_question)
 

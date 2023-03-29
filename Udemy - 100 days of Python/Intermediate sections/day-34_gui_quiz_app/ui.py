@@ -1,5 +1,6 @@
 from tkinter import *
 from quiz_brain import QuizBrain
+from question_model import Question
 
 # --- STYLING CONSTANTS --- #
 # backgrounds
@@ -40,22 +41,22 @@ class QuizzInterface():
         self.question_text = self.question_canvas.create_text(175, 190, text="Question goes here", width=300, font=QUESTION_FONT, fill=QUESTION_FONT_COLOR, justify='center')
         self.question_canvas.create_rectangle(30, 0, 320, 60, fill=CATEGORY_BG_COLOR, outline=CATEGORY_BG_COLOR)
         self.question_canvas.create_text(175, 15, text='CATEGORY', font=CATEGORY_LABEL_FONT, fill=CATEGORY_FONT_COLOR, justify='center')
-        self.category_text = self.question_canvas.create_text(175, 38, text="Name of The Category", font=CATEGORY_NAME_FONT, fill=CATEGORY_FONT_COLOR, justify='center')
+        self.category_text = self.question_canvas.create_text(175, 38, text="Name of The Category", width=300, font=CATEGORY_NAME_FONT, fill=CATEGORY_FONT_COLOR, justify='center')
         self.question_canvas.grid(row=1, column=0, columnspan=2, pady=25)
 
         # true and false buttons
         true_bg = PhotoImage(file="./images/true.png")
         false_bg = PhotoImage(file="./images/false.png")
-        self.true_button = Button(image=true_bg, highlightthickness=0, command=lambda answer='True': self.answer_question(answer))
+        self.true_button = Button(image=true_bg, highlightthickness=0, command=lambda answer='True': self.check_answer(answer))
         self.true_button.grid(row=2, column=0)
-        self.false_button = Button(image=false_bg, highlightthickness=0, command=lambda answer='False': self.answer_question(answer))
+        self.false_button = Button(image=false_bg, highlightthickness=0, command=lambda answer='False': self.check_answer(answer))
         self.false_button.grid(row=2,column=1)
 
         self.generate_next_question()
         self.window.mainloop()
 
 
-    def answer_question(self, user_answer: str):
+    def check_answer(self, user_answer: str):
         '''Called when player clicks either 'true' or 'false' button to answer to the current question, and passes the user answer to the QuizBrain
         to check if that's correct. Calls the method that gives feedback to the player passing the result of this check.'''
         is_correct_answer = self.quiz.is_correct_answer(user_answer)
@@ -78,7 +79,11 @@ class QuizzInterface():
         self.question_canvas.itemconfig(self.question_bg, fill=QUESTION_BG_COLOR)
         if self.quiz.still_has_questions():
             next_question = self.quiz.next_question()
-            self.question_canvas.itemconfig(self.question_text, text=next_question)
+            print(next_question.text)
+            print(next_question.category)
+            print(next_question.answer)
+            self.question_canvas.itemconfig(self.category_text, text=next_question.category)
+            self.question_canvas.itemconfig(self.question_text, text=next_question.text)
         else:
             self.question_canvas.itemconfig(self.question_text, text='You completed the quiz!')
             self.true_button.config(state='disabled')
