@@ -1,5 +1,5 @@
 
-# US STATE GAME
+# US STATES GAME
 
 This project implements a game that challenges player to type correctly the name of all US states. For each correct guess, the name of the state is displyed on the map, at its proper location.
 
