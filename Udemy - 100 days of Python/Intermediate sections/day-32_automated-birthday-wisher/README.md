@@ -1,0 +1,25 @@
+
+# AUTOMATED BIRTHDAY WISHER
+
+The code implements an automated email sender that sends a personalized message for people in their birthday.
+
+- It establishes a connection with email provider's SMTP email server.
+- It gets a reference for today's day and month using the datetime module and stores that info into a tuple.
+- It uses pandas.read_csv to read data from a birthdays.csv file that contains people's nickname, email, day of birth and month of birth.
+- It creates a dictionary using this birthdays.csv data, where the keys are tuples with each person's day of birth and month of birth, and the values are the corresponding nickname and email.
+- If goes through the birthdays dictionary and checks for birthdays happening on today's date (keys of the dictionary that matches today's date tuple).
+- For each birthday that matches today's date, it chooses one of the message templates available in the message_templates folder and replace the placeholder with the person's name to generate a personalized message.
+- It sends a personalized email message to each person whose birthday matches today's date. 
+
+Implemented as part of the capstone project from day 32 of the course *100 days of Python*. All implementation was taken care of prior to watch the solution videos.
+## Key difference from course solution
+
+Course solution won't work properly if there's more than one person with the same birthday, since it doesn't go through the list of all birthdays and then do the action if that birthday matches today's date. It simply does a check to see if today's date exists in the birthdays dictionary, which will make the last entry overwrite any other entry with matching birthdates. In this case, the email is only going to be sent to the last person in the list that has birthday in today's date.
+
+## Side practice
+
+The side practice code implements an automated email sender that sends a random motivation quote everyday to all emails in the list of recipients. The list of quotes is read from a csv file and one is randomly icked and sent in the email's message body.
+
+This side project was uploaded to pyhtonanywhere and there's a task scheduled to run this script and send the email to some people every morning.
+
+Note: for both main project and side practice, all sensitive data were changed to a fake placeholder, just for the sake of sharing this code more safely on GitHub. Code was verified as working with real testing data, and can be used by replacing this data with valid ones.
