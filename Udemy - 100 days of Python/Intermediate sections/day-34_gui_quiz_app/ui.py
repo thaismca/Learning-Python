@@ -140,6 +140,7 @@ class QuizzInterface():
     def end_game(self):
         self.question_canvas.itemconfig(self.question_text, text="You completed the quiz!")
         self.question_canvas.itemconfig(self.category_text, text='')
+        self.question_canvas.itemconfig(self.category_label, text='GAME OVER')
         self.false_button.config(state='disabled')
         self.true_button.config(state='disabled')
 
