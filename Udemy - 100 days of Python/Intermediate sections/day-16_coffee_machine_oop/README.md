@@ -25,6 +25,8 @@ The idea of the course in this projects was to provide the classes and challenge
 
 As per notes from the day 15 project, my implementation was different from the solution provided in the course, as part of my personal challenge to add more features to whatever project developed throughout this course. That being said, this one implementation is also different, and I made changes to the classes that were provided to accomodate for the features that I added.
 
+![coffee machine screenshot](https://github.com/thaismca/Python-Practices/blob/30864761897274aee5c502248f0ff17354a27d8d/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-16_coffee_machine_oop/screenshot.PNG?raw=true)
+
 
 ## How this app works
 
@@ -58,3 +60,21 @@ If there are not enough resources to make any drink, a notification is displayed
 7. The machine has two admin commands that can be typed instead of a drink choice:
 - 'report': prints a report that lists the current quantity of each resource, and the current amount of profit that the machine has made.
 - 'off': turns the machine off.
+
+## Installation and usage
+### Requirements
+- must have python installed
+### How to run this program
+- clone this repository
+- click to open the main.py file with Python
+### How to use the coffee machine
+#### Ordering drinks
+- type the name of the drink you want (not case senstive)
+- if the order entered is for an available drink, you will be prompted to insert coins
+- type the number for each one of the coins (quarter, dime, nickel, penny)
+- once the amount of coins entered are enpugh to cover the drink costs, you will be served your drink
+- the process of inserting coins can be interrupted at any round, so your order will be cancelled and you will receive a refund of the amount you've added
+#### Running admin commands
+- you can see a report on the amount of resources and money currently available on the machine by typing *report* instead of a drink
+- you can turn the machine off by typing *off* instead of a drink
+- turning the machine off and on again "replenishes" the resources and "collects" the profits
