@@ -8,15 +8,19 @@ This project was implemented as part of the day 16 of the course *100 days of Py
 ## Key differences from course solution
 
 - **Show menu**
+
 The implementation displayed in the course has a hard coded menu (espresso, latte, cappuccino). Only after the user selects an item and there's no sufficient resources to make that drink, it displays a message saying that the drink cannot be made due to the lack of resources. This implementation has a dinamic menu that consumes data from the machine_config file, and displays only the items that can be made with the current amount of resources available.
 
 - **Receive money**
+
 The implementation displayed in the course receives the amount of each coin only one. If user doesn't add enough coins in one try, the order is automatically cancelled and the money is refunded. This implementation allows the user to add more coins until the cost is covered, or the user has the option to cancel and get the refund.
 
 - **Low resources alert**
+
 This was added to the scope exclusivelly in this implementation.
 
 - **Clear screen at the end of an action**
+
 Whenever user presses enter to go back to main menu. This was added to the scope exclusivelly in this implementation.
 
 ## Implementation notes
