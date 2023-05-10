@@ -1,0 +1,119 @@
+
+# POMODORO APP
+
+This app implements a Pomodoro Timer.
+
+The Pomodoro Technique is a time management method that implement the following steps:
+
+- Identify a task or tasks that you need to complete.
+- Set a timer for 25 minutes.
+- Work on a task with no distractions.
+- When the alarm sounds, take a 5-minute break.
+- Every 4 work sessions completed, take a longer 15-30 minutes break.
+
+Implemented as part of the day 28 of the course *100 days of Python*.
+Goal of the project was get more practice with Tkinter to create GUI Programs. All implementation was taken care of prior to watch the solution videos.
+## Key differences from course solution
+
+- Course solution does not have the functionality to customize the timer settings.
+
+- Solution presented in the course does not have the functionality that makes the app emit a sound notification, opens the app window if it's currently minimized, and brings the app window to the front.
+
+- In the course solution, start button is never disabled, allowing for multiple clicks that lead to a wired looping timer result.
+
+- All calculation for minutes and seconds gets more complicated in the course solution, because it doesn't work with the datetime.timedelta method.
+
+- Course solution does not allow the number of work sessions per block to be customized, it works with a hard coded value of 4 sessions.
+
+## How this app works
+
+1. When app launches, user sees a window with a TIMER, a START button, a SETTINGS button and a RESET button. There's also a label prompting to click start.
+
+2. By default, settings for timers are:
+
+        Work time - 25 minutes
+	    Short break time - 5 minutes
+	    Long break time - 20 minutes
+	    Work sessions per block - 4
+
+3. The timer can be customized by clicking SETTINGS. Each input accepts a integer between 1 and 100.
+
+4. By clicking START, the timer starts a countdown for a WORK session. After the work timer is done, the timer starts the countdown for a BREAK. If this break happens after completing the number of consecutive work sessions defined as WORK SESSIONS PER BLOCK (default is 4), it will be a LONG BREAK. Otherwise, it's going to be a SHORT BREAK.
+
+5. At the end of each session (either WORK or BREAK), the program will emit a notification sound, will be opened if it's currently minimized, and pop up at the top of all current running programs.
+
+6. While the timer is running, START and SETTINGS will be disabled.
+
+7. By clicking RESET, the program will restore the components of the app to the state on launch. Last SETTINGS applied will still persist for next runs, until the program is closed.
+
+
+## Implementation notes
+
+**Settings**
+
+This class models the settings that can be customized by the user in the Pomodoro App. The attributes initially hold values corresponding to a standard pomodoro protocol.
+
+*Attributes:*
+ - work_min -> number of minutes for each work session. Defaults to 25.
+ - short_break_min -> number of minutes for each short break session. Defaults to 5.
+ - long_break_min -> number of minutes for each long break session. Defaults to 20.
+ - work_sessions_block -> number of work sessions before a long break. Defaults to 4.
+
+*Methods:*
+ - dialog_get_user_input(parent) -> Displays a toplevel widget (relatively on top of parent), where the user can change the settings for the pomodoro timers. This top level widget is rendered with spinboxes that receve numeric inputs for each of the customizable settings and their respective labels, and a button that has a command to submit those settings by calling the submit_settings method. Each of the spinbox will be displayed with a starting value that represents the current value that is being applied to each of the settings.
+
+ - submit_settings() -> Function that is triggered when the button to submit the settings is clicked. It changes the settings attributes to the values entered by the user in the toplevel widget rendered by dialog_get_user_input(parent). After that is done, it destroys the toplevel widget. 
+
+---
+
+**main**
+
+- Constants -> hold values applied to the app aesthetic (color palette, font and background image)
+
+- Settings -> an instance of the Settings class, that holds all current values applied to each of the customizable settings.
+
+- Global variables -> variables that interact with different functions thoughout the application
+
+    - reps -> holds the current value corresponding to the number of sessions that the program has started so far (either work or break). Starts at zero and increments by one at every new session that starts while the timer is running. It goes back to zero on timer reset or app close.
+
+    - work_sessions_counter -> holds a representation of the current number of work sessions that the program has completed so far. It adds one checkmark to every completed work session while the timer is running. It goes back to empty on timer reset or app close.
+
+    - running_timer = holds the identifier of the current running timer, returned from the after method, so the scheduling of the callback function passed to after can be cancelled with after_cancel. It starts at None and it gets an identifier assigned when the timer is started. It goes back to None on timer reset or app close.
+-------
+- **Timer mechanism:** start_timer() -> This function starts a pomodoro timer, taking the session times from the program settings. It runs a certain number of work sessions, defined in work_sessions_block, before entering a long break.
+    - disables the start and settings buttons, so they cannot be clicked when there's a timer running
+    - set different timer sessions and values -> based on settings attributes
+    - checks if reps matches a multiple of (work_sessions_block * 2) -> end of a block -> starts long break
+    - if reps does not match a multiple of (work_sessions_block * 2) -> not the end of a block
+	- not the end of a block + odd reps -> start work session
+	- not the end of a block + even reps -> start short break session
+    - each session is started by calling the countdown() method, passing the number of seconds for that session, that corresponds to its respective attribute in settings
+    - each session will also have a different label displayed, that explicits the name of the session (WORK or BREAK) and has a different color (green for work, pink for short break and red for long break).
+-----
+- **Countdown mechanism:** countdown(seconds) -> This function displays the current time remaining in the format MM:SS, based on the number of seconds passed as argument.
+    - it uses datetime.timedelta to display timer in the MM:SS format, passing the number of seconds and slicing the resulting string to keep only the last 5 characters.
+    - the timer is applied as text attribute to the timer label in the UI.
+    - if there are still time remaining (seconds > 0), the function calls itself after one second, passing (seconds - 1) as argument.
+    - when countdown reaches 0:
+	    - call pop_up_window function
+	    - add a checkmark to the global work_sessions_counter, if the session that just ended was a work session
+	    - call start_timer again
+---
+- **Window pop up behaviour:** def pop_up_window() -> This function makes the app emit a sound notification, opens the app window if it's currently minimized, and brings the app window to the front.
+
+----
+- **Reset mechanism:** reset_app() -> This function resets the whole application.
+    - cancels running timer by calling after_cancel passing the timer identifier
+    - gets all global variables back to values on launch
+    - set screen elements back to state on lanch
+
+---
+- **UI setup**: this section has code that generates all main screen elements and place them on the screen
+    - window -> new top level widget, which will hold all the following elements
+    - session_label -> label element taht will hold the name of the current session (WORK or BREAK). Initially holds text to prompt user to start the timer.
+    - canvas -> canvas widget that will allow layering a background image and the timer text
+    - timer_text -> canvas text that will hold the current value that represents the time remaining for the current session
+    - start_button -> a button that will call start_timer method when clicked
+    - reset_button -> a button that will call reset_app method when clicked
+    - settings_button -> a button that will call dialog.get_user_input method from the Settings class when clicked, passing the current window as parent
+    - work_sessions_counter_label -> label element to display the checkmarks from work_sessions_counter
