@@ -2,19 +2,17 @@ import requests
 import os
 from twilio.rest import Client
 
-# NOTE: fake values must be replaced with valid ones -> fake ones are put in here for security reasons
-
+# Hide sensitive insformation -> Environment Variables
 # twilio authentication data
-account_sid = "fake_sid"
-auth_token = "fake_token"
-twilio_phone_number = "fake_twilio_number"
-receiver_phone_nuber = "fake_receiver_number"
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+twilio_phone_number = os.environ['TWILIO_PHONE_NUMBER']
+receiver_phone_nuber = os.environ['RECEIVER_PHONE_NUMBER']
 
-# TODOS:
 # Retrieve weather data for a given location from the Open Weather API
-api_key = "fake_api_key"
-my_lat = 49.282730
-my_long = -123.120735
+api_key = os.environ['OWM_API_KEY']
+my_lat = os.environ['LAT']
+my_long = os.environ['LONG']
 
 request_data = requests.get(url=f"https://api.openweathermap.org/data/2.8/onecall?lat={my_lat}&lon={my_long}&exclude=current,minutely,daily&appid={api_key}")
 request_data.raise_for_status()
@@ -35,6 +33,3 @@ for hour in twelve_hours_forecast:
         print(message.status)
         break
 
-
-# Use PythonAnywhere to automate the Python Script
-# Hide API Keys -> Environment Variables
