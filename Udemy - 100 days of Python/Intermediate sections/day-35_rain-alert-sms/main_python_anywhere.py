@@ -25,16 +25,19 @@ request_data.raise_for_status()
 # Check if it will rain in that location in the next 12 hours
 # rain weather ids are all <600 and snow are the 6xx -> this implementation will include snow in the alert
 twelve_hours_forecast = request_data.json()['hourly'][:12]
+message = 'No need to bring an umbrella today.'
 for hour in twelve_hours_forecast:
     if (hour['weather'][0]['id'] < 700):
-        # Send SMS via the Twilio API
-        client = Client(account_sid, auth_token, http_client=proxy_client)
-        message = client.messages \
-                .create(
-                     body="Keep yourself dry today. Bring an umbrella!",
-                     from_= twilio_phone_number,
-                     to= receiver_phone_nuber
-                 )
-        print(message.status)
+        message = 'Keep yourself dry today. Bring an umbrella!'
         break
+
+# Send SMS via the Twilio API
+client = Client(account_sid, auth_token, http_client=proxy_client)
+message = client.messages \
+        .create(
+            body= message,
+            from_= twilio_phone_number,
+            to= receiver_phone_nuber
+        )
+print(message.status)
 
