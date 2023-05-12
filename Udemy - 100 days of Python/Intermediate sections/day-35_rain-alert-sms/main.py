@@ -1,8 +1,18 @@
 import requests
+import os
+from twilio.rest import Client
+
+# NOTE: fake values must be replaced with valid ones -> fake ones are put in here for security reasons
+
+# twilio authentication data
+account_sid = "fake_sid"
+auth_token = "fake_token"
+twilio_phone_number = "fake_twilio_number"
+receiver_phone_nuber = "fake_receiver_number"
 
 # TODOS:
 # Retrieve weather data for a given location from the Open Weather API
-api_key = "a099ba2c15bd323e64db8198dd5febdb"
+api_key = "fake_api_key"
 my_lat = 49.282730
 my_long = -123.120735
 
@@ -14,9 +24,17 @@ request_data.raise_for_status()
 twelve_hours_forecast = request_data.json()['hourly'][:12]
 for hour in twelve_hours_forecast:
     if (hour['weather'][0]['id'] < 700):
-        print('Bring an umbrella')
+        # Send SMS via the Twilio API
+        client = Client(account_sid, auth_token)
+        message = client.messages \
+                .create(
+                     body="Keep yourself dry today. Bring an umbrella!",
+                     from_= twilio_phone_number,
+                     to= receiver_phone_nuber
+                 )
+        print(message.status)
         break
 
-# Send SMS via the Twilio API
+
 # Use PythonAnywhere to automate the Python Script
 # Hide API Keys -> Environment Variables
