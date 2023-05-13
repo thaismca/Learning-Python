@@ -4,7 +4,9 @@ from twilio.rest import Client
 from datetime import *
 import smtplib
 
-# Hide sensitive information -> Environment Variables
+# retrieving hiden sensitive information -> Environment Variables
+from dotenv import load_dotenv
+load_dotenv()
 
 # email sender
 host = os.environ['MAIL_HOST']
@@ -89,4 +91,4 @@ connection.starttls()
 connection.login(user=sender_email, password=sender_password)
 connection.sendmail(from_addr=sender_email,
                  to_addrs= recipient_email,
-                 msg=email_message)
+                 msg=f'Subject:Next 12 hours forecast, {email_message}')
