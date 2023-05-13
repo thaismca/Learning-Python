@@ -1,0 +1,3 @@
+[TIME]:00 - [DESCRIPTION]
+    Temperature: [TEMP]
+    Feels Like: [FEELS_LIKE]
