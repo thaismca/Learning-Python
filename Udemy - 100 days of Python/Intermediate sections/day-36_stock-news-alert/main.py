@@ -70,15 +70,13 @@ else:
             for news in news_data:
                 text = f"{stock[0]['symbol']}: {arrow}{percentage_diff:.2f}%\nHeadline: {news['title']}\nBrief: {news['description']}"
 
-                print(text)
-
-            # client = Client(account_sid, auth_token)
-            # message = client.messages \
-            #     .create(
-            #     body= text,
-            #     from_= twilio_phone_number,
-            #     to= receiver_phone_nuber
-            # )
-            # print(message.status) 
+                client = Client(account_sid, auth_token)
+                message = client.messages \
+                    .create(
+                    body= text,
+                    from_= twilio_phone_number,
+                    to= receiver_phone_nuber
+                )
+                print(message.status) 
         
 
