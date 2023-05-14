@@ -3,6 +3,9 @@ import requests
 from datetime import datetime, timedelta
 from twilio.rest import Client
 
+# companies to check
+from my_settings import stocks_list, alert_threshold
+
 # retrieving hiden sensitive information -> Environment Variables
 from dotenv import load_dotenv
 load_dotenv()
@@ -10,10 +13,6 @@ load_dotenv()
 # endpoints
 STOCK_ENDPOINT = "http://api.marketstack.com/v1/eod"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
-
-# company data
-STOCK_SYMBOL = "TSLA"
-COMPANY_NAME = "Tesla Inc"
 
 # Twilio API data
 account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -28,7 +27,7 @@ day_before_yesterday = (datetime.now() - timedelta(2)).date()
 # When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then fetch the first 3 articles for the COMPANY_NAME.
 # fetch data from stocks API
 params_stock = {
-    "symbols": STOCK_SYMBOL,
+    "symbols": ",".join([item['symbol'] for item in stocks_list]),
     "access_key": os.environ["STOCKS_API_KEY"],
     'date_from': day_before_yesterday,
     'date_to': yesterday
@@ -37,38 +36,45 @@ res = requests.get(STOCK_ENDPOINT, params=params_stock)
 res.raise_for_status()
 stock_data = res.json()["data"]
 
-# get closing price for yesterday and the day before yesterday
-yesterday_close = stock_data[0]["close"]
-day_before_close = stock_data[1]["close"]
+# this API returns data all separately -> group data for each company
+stock_data_processed = []
+for company in stocks_list:
+    stock_data_processed.append([item for item in stock_data if item['symbol'] == company['symbol']])
 
-# check if the difference between yesterday and the day before yesterday is greater that 5%
-if abs(yesterday_close - day_before_close) > abs(day_before_close * 0.05):
+for stock in stock_data_processed:
+    # get closing price for yesterday and the day before yesterday
+    yesterday_close = stock[0]["close"]
+    day_before_close = stock[1]["close"]
+
+    # check if the difference between yesterday and the day before yesterday is greater that 5%
+    if abs(yesterday_close - day_before_close) > abs(day_before_close * (alert_threshold/100)):
     # fetch data from news API
-    params_news = {
-        "qInTitle": COMPANY_NAME,
-        "apiKey": os.environ["NEWS_API_KEY"],
-    }
-    res = requests.get(NEWS_ENDPOINT, params=params_news)
-    res.raise_for_status()
-    news_data = res.json()['articles'][:3]
+        params_news = {
+            "qInTitle": next(item['company'] for item in stocks_list if item['symbol'] == stock[0]['symbol']) ,
+            "apiKey": os.environ["NEWS_API_KEY"],
+        }
+    
+        res = requests.get(NEWS_ENDPOINT, params=params_news)
+        res.raise_for_status()
+        news_data = res.json()['articles'][:3]
 
+        # Send a separate message with each article's title and description to your phone number.
+        # Send SMS via the Twilio API
+        percentage_diff = (abs(yesterday_close - day_before_close)/day_before_close) * 100.
+        arrow = '🔺' if yesterday_close > day_before_close else '🔻'
 
-    ## STEP 3: Use twilio.com/docs/sms/quickstart/python
-    # Send a separate message with each article's title and description to your phone number.
-    # Send SMS via the Twilio API
-    percentage_diff = (abs(yesterday_close - day_before_close)/day_before_close) * 100.
-    arrow = '🔺' if yesterday_close > day_before_close else '🔻'
+        for news in news_data:
+            text = f"{stock[0]['symbol']}: {arrow}{percentage_diff:.2f}%\nHeadline: {news['title']}\nBrief: {news['description']}"
 
-    for news in news_data:
-        text = f"{STOCK_SYMBOL}: {arrow}{percentage_diff:.2f}%\nHeadline: {news['title']}\nBrief: {news['description']}"
+            print(text)
 
         client = Client(account_sid, auth_token)
         message = client.messages \
             .create(
-                body= text,
-                from_= twilio_phone_number,
-                to= receiver_phone_nuber
-            )
+            body= text,
+            from_= twilio_phone_number,
+            to= receiver_phone_nuber
+        )
         print(message.status) 
      
 
