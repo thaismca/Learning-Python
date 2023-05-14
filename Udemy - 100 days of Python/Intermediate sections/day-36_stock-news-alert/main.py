@@ -18,10 +18,8 @@ COMPANY_NAME = "Tesla Inc"
 yesterday = (datetime.now() - timedelta(1)).date()
 day_before_yesterday = (datetime.now() - timedelta(2)).date()
 
-## STEP 1: Use http://api.marketstack.com/v1/eod
 # When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
-
-# fetch API data
+# fetch data from stocks API
 params_stock = {
     "symbols": STOCK_SYMBOL,
     "access_key": os.environ["STOCKS_API_KEY"],
@@ -38,20 +36,23 @@ day_before_close = stock_data[1]["close"]
 
 # check if the difference between yesterday and the day before yesterday is greater that 5%
 if abs(yesterday_close - day_before_close) > abs(day_before_close * 0.05):
-    print("get news")
+    ## STEP 2: Use https://newsapi.org/docs/endpoints/everything
+    # Instead of printing ("Get News"), actually fetch the first 3 articles for the COMPANY_NAME. 
+    # fetch data from news API
+    params_news = {
+        "qInTitle": COMPANY_NAME,
+        "apiKey": os.environ["NEWS_API_KEY"],
+    }
+    res = requests.get(NEWS_ENDPOINT, params=params_news)
+    res.raise_for_status()
+    news_data = res.json()['articles'][:3]
 
-
-
-
-
-
-## STEP 2: Use https://newsapi.org/docs/endpoints/everything
-# Instead of printing ("Get News"), actually fetch the first 3 articles for the COMPANY_NAME. 
-
+    print(news_data)
 
 
 ## STEP 3: Use twilio.com/docs/sms/quickstart/python
 # Send a separate message with each article's title and description to your phone number. 
+#HINT 1: Consider using a List Comprehension.
 
 
 
