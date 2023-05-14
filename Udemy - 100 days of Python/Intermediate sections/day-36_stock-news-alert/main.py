@@ -1,6 +1,7 @@
 import os
 import requests
 from datetime import datetime, timedelta
+from twilio.rest import Client
 
 # retrieving hiden sensitive information -> Environment Variables
 from dotenv import load_dotenv
@@ -14,11 +15,17 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 STOCK_SYMBOL = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 
+# Twilio API data
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+twilio_phone_number = os.environ['TWILIO_PHONE_NUMBER']
+receiver_phone_nuber = os.environ['RECEIVER_PHONE_NUMBER']
+
 # dates
 yesterday = (datetime.now() - timedelta(1)).date()
 day_before_yesterday = (datetime.now() - timedelta(2)).date()
 
-# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
+# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then fetch the first 3 articles for the COMPANY_NAME.
 # fetch data from stocks API
 params_stock = {
     "symbols": STOCK_SYMBOL,
@@ -36,8 +43,6 @@ day_before_close = stock_data[1]["close"]
 
 # check if the difference between yesterday and the day before yesterday is greater that 5%
 if abs(yesterday_close - day_before_close) > abs(day_before_close * 0.05):
-    ## STEP 2: Use https://newsapi.org/docs/endpoints/everything
-    # Instead of printing ("Get News"), actually fetch the first 3 articles for the COMPANY_NAME. 
     # fetch data from news API
     params_news = {
         "qInTitle": COMPANY_NAME,
@@ -47,23 +52,23 @@ if abs(yesterday_close - day_before_close) > abs(day_before_close * 0.05):
     res.raise_for_status()
     news_data = res.json()['articles'][:3]
 
-    print(news_data)
 
+    ## STEP 3: Use twilio.com/docs/sms/quickstart/python
+    # Send a separate message with each article's title and description to your phone number.
+    # Send SMS via the Twilio API
+    percentage_diff = (abs(yesterday_close - day_before_close)/day_before_close) * 100.
+    arrow = '🔺' if yesterday_close > day_before_close else '🔻'
 
-## STEP 3: Use twilio.com/docs/sms/quickstart/python
-# Send a separate message with each article's title and description to your phone number. 
-#HINT 1: Consider using a List Comprehension.
+    for news in news_data:
+        text = f"{STOCK_SYMBOL}: {arrow}{percentage_diff:.2f}%\nHeadline: {news['title']}\nBrief: {news['description']}"
 
-
-
-#Optional: Format the SMS message like this: 
-"""
-TSLA: 🔺2%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-or
-"TSLA: 🔻5%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-"""
+        client = Client(account_sid, auth_token)
+        message = client.messages \
+            .create(
+                body= text,
+                from_= twilio_phone_number,
+                to= receiver_phone_nuber
+            )
+        print(message.status) 
+     
 
