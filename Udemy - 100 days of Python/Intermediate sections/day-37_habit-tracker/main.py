@@ -1,5 +1,6 @@
 import os
 import requests
+import datetime as dt
 
 # retrieving hiden sensitive information -> Environment Variables
 from dotenv import load_dotenv
@@ -18,9 +19,9 @@ user_params = {
     "notMinor": "yes"
 }
 
-res = requests.post(url=create_user_endpoint, json=user_params)
-print(res.text)
-res.raise_for_status()
+# res = requests.post(url=create_user_endpoint, json=user_params)
+# print(res.text)
+# res.raise_for_status()
 
 
 # STEP 2: create a new graph for the user
@@ -41,9 +42,9 @@ headers = {
     "X-USER-TOKEN": os.environ["USER_TOKEN"]
 }
 
-res = requests.post(url=create_graph_endpoint, json=graph_params, headers=headers)
-print(res.text)
-res.raise_for_status()
+# res = requests.post(url=create_graph_endpoint, json=graph_params, headers=headers)
+# print(res.text)
+# res.raise_for_status()
 
 # STEP 3: add a pixel to the habit tracker
 ## endpoint: 'https://pixe.la/v1/users/<username>/graphs/<graphID>'
@@ -52,9 +53,12 @@ res.raise_for_status()
 ## more details in the docs: https://docs.pixe.la/entry/post-pixel
 graph_id = "graph1"
 create_pixel_endpoint = f'https://pixe.la/v1/users/{os.environ["USER_NAME"]}/graphs/{graph_id}'
+
+# autofill with today's date
+today = dt.datetime.now()
 pixel_params = {
-    "date": "20230517",
-    "quantity": "2",
+    "date": today.strftime("%Y%m%d"),
+    "quantity": "5",
 }
 
 res = requests.post(url=create_pixel_endpoint, json=pixel_params, headers=headers)
