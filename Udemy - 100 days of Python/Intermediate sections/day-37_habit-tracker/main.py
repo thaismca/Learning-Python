@@ -61,9 +61,33 @@ pixel_params = {
     "quantity": "5",
 }
 
-res = requests.post(url=create_pixel_endpoint, json=pixel_params, headers=headers)
+# res = requests.post(url=create_pixel_endpoint, json=pixel_params, headers=headers)
+# print(res.text)
+# res.raise_for_status()
+
+
+# STEP 4: update a pixel in the habit tracker
+## endpoint: 'https://pixe.la//v1/users/<username>/graphs/<graphID>/<yyyyMMdd>'
+## must provide new quantity in the parameters
+## token must be provided in the request headers
+## more details in the docs: https://docs.pixe.la/entry/put-pixel
+graph_id_to_update = "graph1"
+date_to_update = "20220517"
+update_pixel_endpoint = f'https://pixe.la/v1/users/{os.environ["USER_NAME"]}/graphs/{graph_id_to_update}/{date_to_update}'
+
+update_pixel_params = {
+    "quantity": "9",
+}
+
+res = requests.put(url=update_pixel_endpoint, json=update_pixel_params, headers=headers)
 print(res.text)
 res.raise_for_status()
+
+# STEP 5: delete a pixel in the habit tracker
+## endpoint: 'https://pixe.la///v1/users/<username>/graphs/<graphID>/<yyyyMMdd>'
+## token must be provided in the request headers
+## more details in the docs: https://docs.pixe.la/entry/delete-pixel
+
 
 # EXTRA CHALLENGE
 ## Make this as a program that runs in the terminal an can be used to create a new user and manage an user's graph(s) 
