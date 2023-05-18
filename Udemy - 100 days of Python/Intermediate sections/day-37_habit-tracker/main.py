@@ -72,21 +72,27 @@ pixel_params = {
 ## token must be provided in the request headers
 ## more details in the docs: https://docs.pixe.la/entry/put-pixel
 graph_id_to_update = "graph1"
-date_to_update = "20220517"
+date_to_update = "20230517"
 update_pixel_endpoint = f'https://pixe.la/v1/users/{os.environ["USER_NAME"]}/graphs/{graph_id_to_update}/{date_to_update}'
 
 update_pixel_params = {
     "quantity": "9",
 }
 
-res = requests.put(url=update_pixel_endpoint, json=update_pixel_params, headers=headers)
-print(res.text)
-res.raise_for_status()
+# res = requests.put(url=update_pixel_endpoint, json=update_pixel_params, headers=headers)
+# print(res.text)
+# res.raise_for_status()
 
 # STEP 5: delete a pixel in the habit tracker
 ## endpoint: 'https://pixe.la///v1/users/<username>/graphs/<graphID>/<yyyyMMdd>'
 ## token must be provided in the request headers
 ## more details in the docs: https://docs.pixe.la/entry/delete-pixel
+date_to_delete = "20230517"
+delete_pixel_endpoint = f'https://pixe.la/v1/users/{os.environ["USER_NAME"]}/graphs/{graph_id_to_update}/{date_to_update}'
+
+res = requests.delete(url=update_pixel_endpoint, headers=headers)
+print(res.text)
+res.raise_for_status()
 
 
 # EXTRA CHALLENGE
