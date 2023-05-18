@@ -42,7 +42,6 @@ headers = {
 }
 
 res = requests.post(url=create_graph_endpoint, json=graph_params, headers=headers)
-print(res.headers)
 print(res.text)
 res.raise_for_status()
 
@@ -51,6 +50,16 @@ res.raise_for_status()
 ## must provide date and quantity in the parameters
 ## token must be provided in the request headers
 ## more details in the docs: https://docs.pixe.la/entry/post-pixel
+graph_id = "graph1"
+create_pixel_endpoint = f'https://pixe.la/v1/users/{os.environ["USER_NAME"]}/graphs/{graph_id}'
+pixel_params = {
+    "date": "20230517",
+    "quantity": "2",
+}
+
+res = requests.post(url=create_pixel_endpoint, json=pixel_params, headers=headers)
+print(res.text)
+res.raise_for_status()
 
 # EXTRA CHALLENGE
 ## Make this as a program that runs in the terminal an can be used to create a new user and manage an user's graph(s) 
