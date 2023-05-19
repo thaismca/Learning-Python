@@ -25,3 +25,7 @@ I used the knowlege aquired in this day's lesson to implemente a program that ru
   - Update existing pixel in a user's graph in Pixela
   - Delete an existing new pixel in a user's graph in Pixela
 - In order to get more details about how to fill the inputs, visit the Pixela's documentation at https://docs.pixe.la/
+
+![project screenshot - create pixel](https://github.com/thaismca/Python-Practices/blob/ec238e3025c3623469d9f0ac8af1f083a907a058/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-37_habit-tracker/createPixel.PNG?raw='true')
+
+![project screenshot - delete pixel](https://github.com/thaismca/Python-Practices/blob/ec238e3025c3623469d9f0ac8af1f083a907a058/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-37_habit-tracker/deletePixel.PNG?raw='true')
