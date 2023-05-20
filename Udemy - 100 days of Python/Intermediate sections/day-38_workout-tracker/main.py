@@ -136,7 +136,7 @@ def add_workout():
                 }
                 
                 for exercise in nutritionix_res_data['exercises']:
-                    exercise_seconds = exercise['duration_min']
+                    exercise_seconds = exercise['duration_min']*60
                     td = str(dt.timedelta(seconds=exercise_seconds)).split(".")[0]
                     sheety_add_row_req_body = {
                         "workout": {
