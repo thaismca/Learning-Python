@@ -82,7 +82,7 @@ This data is all saved to a json file in this project directory *settings.json*.
 ![manage settings](https://github.com/thaismca/Python-Practices/blob/279e0a7e1cfb6c0c889226fefe6853c8c57a4808/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-38_workout-tracker/manage_settings.PNG?raw='true')
 
 #### Data saved to spreadsheet
-![spreadsheet](https://github.com/thaismca/Python-Practices/blob/279e0a7e1cfb6c0c889226fefe6853c8c57a4808/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-38_workout-tracker/spreadsheet_data.PNG?raw='true')
+![spreadsheet](https://github.com/thaismca/Python-Practices/blob/3780738efcfca90d790fb475389fba5b160b867a/Udemy%20-%20100%20days%20of%20Python/Intermediate%20sections/day-38_workout-tracker/spreadsheet_data.PNG?raw='true')
 
 
 
