@@ -11,16 +11,10 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 # get data from spreadsheet
-sheety_req_headers = {
-    "Authorization": "Basic " + os.environ.get('SHEETY_AUTH'),
-}
-sheety_get_rows_endpoint= 'https://api.sheety.co/ecd388c9c56d18a14d531a5e0532f1b9/flightDeals/prices'
-                
-sheety_res = requests.get(url=sheety_get_rows_endpoint, headers=sheety_req_headers)
-sheety_res.raise_for_status()
-sheety_res_data = sheety_res.json()['prices']
+from data_manager import DataManager
+data_manager = DataManager()
+sheety_res_data = data_manager.get_prices_sheet_data()
 
 # get IATA codes for each city and add them to the respective column in the spreadsheet
 TEQUILA_ENDPOINT = "https://tequila-api.kiwi.com"
@@ -38,13 +32,16 @@ for row in sheety_res_data:
         location_res_data = location_res.json()["locations"]
         
         sheety_edit_row_endpoint=f'https://api.sheety.co/ecd388c9c56d18a14d531a5e0532f1b9/flightDeals/prices/{row["id"]}'
+        sheety_req_headers = {
+            "Authorization": "Basic " + os.environ.get('SHEETY_AUTH'),
+        }
         sheety_edit_row_req_body = {
                 "price": {
                     "iataCode": location_res_data[0]["code"]
                 }
         }
         sheety_post_res = requests.put(url=sheety_edit_row_endpoint, json=sheety_edit_row_req_body, headers=sheety_req_headers)
-        sheety_res.raise_for_status()
+        sheety_post_res.raise_for_status()
 
 
 
