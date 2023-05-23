@@ -1,9 +1,13 @@
 import requests
 import os
 
+# retrieving hiden sensitive information -> Environment Variables
+from dotenv import load_dotenv
+load_dotenv()
+
 SHEETY_ENDPOINT = os.environ.get('SHEETY_ENDPOINT')
 SHEETY_REQ_HEADERS = {
-            "Authorization": "Basic " + os.environ.get('SHEETY_AUTH'),
+            "Authorization": f"Basic {os.environ.get('SHEETY_AUTH')}",
         }
 
 class DataManager:
