@@ -26,18 +26,17 @@ try:
         ## If the price is lower than the lowest price listed in the Google Sheet then send an SMS to your own number with the Twilio API.
         ## The SMS should include the departure airport IATA code, destination airport IATA code, departure city, 
         ## destination city, flight price and flight dates.
-        for flight in found_flight:
-            departure_airport = flight["flyFrom"]
-            departure_city = flight["cityFrom"]
-            destination_airport = flight["flyTo"]
-            destination_city = flight["cityTo"]
-            price = flight["price"]
-            departure_date = datetime.fromtimestamp(flight["dTime"]).date()
-            return_date = (datetime.fromtimestamp(flight["dTime"]) + timedelta(flight["nightsInDest"])).date()
+        if len(found_flight) > 0:
+            final_message = 'Low price alert!\n'
+            for flight in found_flight:
+                final_message += f'''\nOnly {flight_search.currency}{flight.price} to fly from {flight.departure_city}-{flight.departure_airport}
+to {flight.destination_city}-{flight.destination_airport}, {flight.departure_date} to {flight.return_date}\n'''
+            
+            from notification_manager import NotificationManager
+            notification_manager = NotificationManager()
+            notification_manager.send_sms(final_message)
+        
 
-            print(f'''Low price alert!
-Only CAD{price} to fly from {departure_city}-{departure_airport} to {destination_city}-{destination_airport},
-from {departure_date} to {return_date}''')
    
 except KeyError:
     print('Spreadsheet data is corrupted. Cannot proceed with operation.')    

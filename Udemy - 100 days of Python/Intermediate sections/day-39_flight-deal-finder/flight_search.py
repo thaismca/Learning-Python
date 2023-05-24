@@ -2,6 +2,8 @@ import requests
 import os
 from datetime import datetime, timedelta
 
+from flight_data import FlightData
+
 # retrieving hiden sensitive information -> Environment Variables
 from dotenv import load_dotenv
 load_dotenv()
@@ -41,7 +43,7 @@ class FlightSearch:
 
 
     def find_flights(self, city, max_price):
-        '''This function returns all the flights that match the search criteria.'''
+        '''This function returns an array with all the flights that match the search criteria.'''
 
         ## In this project, we're looking only for direct flights, that leave anytime between tomorrow and in 6 months time.
         ## We're also looking for round trips that return between 7 and 28 days in length.
@@ -61,4 +63,19 @@ class FlightSearch:
         flights_res.raise_for_status()
         flights_res_data = flights_res.json()["data"]
 
-        return flights_res_data
+        all_flights_data = []
+        for flight in flights_res_data:
+            flight_data = FlightData(
+                departure_airport = flight["flyFrom"],
+                departure_city = flight["cityFrom"],
+                destination_airport = flight["flyTo"],
+                destination_city = flight["cityTo"],
+                price = flight["price"],
+                departure_date = datetime.fromtimestamp(flight["dTime"]).date(),
+                return_date = (datetime.fromtimestamp(flight["dTime"]) + timedelta(flight["nightsInDest"])).date()
+            )
+            all_flights_data.append(flight_data)
+
+        
+        return all_flights_data
+
