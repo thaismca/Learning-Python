@@ -11,8 +11,8 @@ class NotificationManager:
         self.client = Client(os.environ.get('TWILIO_SID'), os.environ.get('TWILIO_AUTH_TOKEN'))
 
 
-
     def send_sms(self, message):
+        '''This function sends a message to a verified number using the Twilio API'''
         message = self.client.messages.create(
             body=message,
             from_=os.environ.get('TWILIO_PHONE_NUMBER'),

@@ -4,15 +4,17 @@ from datetime import datetime, timedelta
 
 from flight_data import FlightData
 
-# retrieving hiden sensitive information -> Environment Variables
+# retrieving hidden sensitive information -> Environment Variables
 from dotenv import load_dotenv
 load_dotenv()
 
-TEQUILA_ENDPOINT = "https://tequila-api.kiwi.com"
 
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
     def __init__(self) -> None:
+        # tequila endpoint
+        self.endpoint = "https://tequila-api.kiwi.com"
+        
         # request headers
         self.headers = {
             "apikey": os.environ.get('TEQUILA_API_KEY')
@@ -34,7 +36,7 @@ class FlightSearch:
             "term": city,
             "location_types": "city"
         }
-        location_res = requests.get(f'{TEQUILA_ENDPOINT}/locations/query', params=params,headers=self.headers)
+        location_res = requests.get(f'{self.endpoint}/locations/query', params=params,headers=self.headers)
         location_res.raise_for_status()
         location_res_data = location_res.json()["locations"]
         
@@ -59,10 +61,12 @@ class FlightSearch:
             "curr": self.currency,
             "price_to": max_price
         }
-        flights_res = requests.get(f'{TEQUILA_ENDPOINT}/search', params=params,headers=self.headers)
+        flights_res = requests.get(f'{self.endpoint}/search', params=params,headers=self.headers)
         flights_res.raise_for_status()
         flights_res_data = flights_res.json()["data"]
 
+        ## in the course only the fisrt result is being considered to send a message
+        ## here I want to send a message with all the options that match the search criteria
         all_flights_data = []
         for flight in flights_res_data:
             flight_data = FlightData(
@@ -76,6 +80,5 @@ class FlightSearch:
             )
             all_flights_data.append(flight_data)
 
-        
         return all_flights_data
 

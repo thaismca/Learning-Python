@@ -1,18 +1,15 @@
-# Program Requirements
-import os
-import requests
-from datetime import datetime, timedelta
-from time import localtime
+from data_manager import DataManager
+from flight_search import FlightSearch
+from notification_manager import NotificationManager
 
+# creating instances of the external classes
+data_manager = DataManager()
+flight_search = FlightSearch()
+notification_manager = NotificationManager()
 
 # get data from spreadsheet
-from data_manager import DataManager
-data_manager = DataManager()
 sheety_res_data = data_manager.get_prices_sheet_data()
 
-# get IATA codes for each city and add them to the respective column in the spreadsheet
-from flight_search import FlightSearch
-flight_search = FlightSearch()
 try:
     for row in sheety_res_data:
         ## Use the Flight Search and Sheety API to populate your own copy of the Google Sheet with IATA Codes for each city that doesn't have one
@@ -23,20 +20,16 @@ try:
         ## Use the Flight Search API to check for the cheapest flights from tomorrow to 6 months later for all the cities in the Google Sheet.
         found_flight = flight_search.find_flights(iataCode, row["lowestPrice"])
 
-        ## If the price is lower than the lowest price listed in the Google Sheet then send an SMS to your own number with the Twilio API.
-        ## The SMS should include the departure airport IATA code, destination airport IATA code, departure city, 
-        ## destination city, flight price and flight dates.
+        ## If search returned at least one result, send SMS to a verified phone number with the Twilio API
         if len(found_flight) > 0:
             final_message = 'Low price alert!\n'
             for flight in found_flight:
+                ## The SMS should include the departure airport IATA code, destination airport IATA code, departure city, 
+                ## destination city, flight price and flight dates.
                 final_message += f'''\nOnly {flight_search.currency}{flight.price} to fly from {flight.departure_city}-{flight.departure_airport}
 to {flight.destination_city}-{flight.destination_airport}, {flight.departure_date} to {flight.return_date}\n'''
-            
-            from notification_manager import NotificationManager
-            notification_manager = NotificationManager()
-            notification_manager.send_sms(final_message)
-        
 
+            notification_manager.send_sms(final_message)
    
 except KeyError:
     print('Spreadsheet data is corrupted. Cannot proceed with operation.')    
