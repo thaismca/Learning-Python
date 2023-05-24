@@ -21,12 +21,12 @@ class FlightSearch:
         }
 
         # flight search criteria
-        self.origin = 'YVR'
+        self.origin = os.environ.get('ORIGIN')
         self.depart_date_from = (datetime.now() + timedelta(1)).date()
         self.depart_date_to = (datetime.now() + timedelta(weeks=24)).date()
-        self.min_stay = 7
-        self.max_stay = 28
-        self.currency = 'CAD'
+        self.min_stay = os.environ.get('MIN_STAY')
+        self.max_stay = os.environ.get('MAX_STAY')
+        self.currency = os.environ.get('CURRENCY')
 
 
 
