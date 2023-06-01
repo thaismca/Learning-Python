@@ -38,6 +38,16 @@ while not valid_date:
 
         
 # Scrape the top 100 song titles on that date into a Python List using BeautifulSoup
+import requests
+from bs4 import BeautifulSoup
+
+res = requests.get('https://www.billboard.com/charts/hot-100/' + date)
+soup = BeautifulSoup(res.text, 'html.parser')
+songs = soup.select('li h3.c-title')
+song_titles_list = [title.get_text().strip() for title in songs]
+print(song_titles_list)
+
 # Authenticate with Spotify using your unique Client ID/ Client Secret
+
 # Create a list of Spotify song URIs for the list of song names that were found from by scraping billboard 100
 # Create a new private playlist and each of the songs to the new playlist
