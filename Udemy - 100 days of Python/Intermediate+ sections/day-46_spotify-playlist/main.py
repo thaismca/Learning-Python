@@ -51,8 +51,6 @@ for title in songs:
     artist = title.find_next_sibling()
     artists_list.append(artist.get_text().strip())
 
-print(song_titles_list)
-print(artists_list)
 
 # Authenticate with Spotify using your unique Client ID/ Client Secret
 import spotipy
@@ -74,4 +72,23 @@ user_id = sp.current_user()["id"]
 print(user_id)
 
 # Create a list of Spotify song URIs for the list of song names that were found from by scraping billboard 100
+song_uris = []
+for song in song_titles_list:
+    song_artist = artists_list[song_titles_list.index(song)].replace("Featuring", "")
+    # refined search passing song name and artist
+    search_result = sp.search(q=f"track:{song} artist:{song_artist}", type="track")
+    try:
+        uri = search_result["tracks"]["items"][0]["uri"]
+        song_uris.append(uri)
+    except IndexError:
+        # broad search passing only song name
+        backup_search_result = sp.search(q=f"track:{song}", type="track")
+        try:
+            uri = backup_search_result["tracks"]["items"][0]["uri"]
+            song_uris.append(uri)
+        except IndexError:
+            # both searches failed
+            print(f"{song} by {artists_list[song_titles_list.index(song)]} doesn't exist in Spotify. Skipped.")
+
+
 # Create a new private playlist and each of the songs to the new playlist
