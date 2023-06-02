@@ -1,11 +1,23 @@
 import re
 import datetime as dt
-# Create an input prompt that asks what year the user would like to travel to in YYYY-MM-DD format
-def get_user_date():
+import requests
+from bs4 import BeautifulSoup
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+import os
+from dotenv import load_dotenv
+
+# get access to environment variables
+load_dotenv()
+
+## HELPER FUNCTIONS
+def get_user_date() -> str:
+    '''Creates an input prompt that asks what year the user would like to travel to in YYYY-MM-DD format. Returns the data from the input.'''
     date = input("Enter a date to travel back in time and create a playlist with the 100 most played songs of the week.\nDate must be in format YYYY-MM-DD.\n")
     return date
 
-def validate_date(date):
+def validate_date(date) -> bool:
+    '''Validades a string date, checking if it's in the expected format (YYYY-MM-DD) and if it's in the range from August 4, 1958 to yesterday'''
     valid_pattern = "^\d{4}-\d{2}-\d{2}$"
     # validate date format
     if not re.match(valid_pattern, date):
@@ -31,21 +43,21 @@ def validate_date(date):
     
     return True
 
+
+## RUN PROGRAM
+# Get a valid date from the user
 valid_date = False
 while not valid_date:
     date = get_user_date()
     valid_date = validate_date(date)
-
         
-# Scrape the top 100 song titles on that date into a Python List using BeautifulSoup
-import requests
-from bs4 import BeautifulSoup
+# Scrape the top 100 song titles on that date, and the respective artists, into a Python List using BeautifulSoup
+song_titles_list = []
+artists_list = []
 
 res = requests.get('https://www.billboard.com/charts/hot-100/' + date)
 soup = BeautifulSoup(res.text, 'html.parser')
 songs = soup.select('li h3.c-title')
-song_titles_list = []
-artists_list = []
 for title in songs:
     song_titles_list.append(title.get_text().strip())
     artist = title.find_next_sibling()
@@ -53,14 +65,6 @@ for title in songs:
 
 
 # Authenticate with Spotify using your unique Client ID/ Client Secret
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import os
-from dotenv import load_dotenv
-
-# get access to environment variables
-load_dotenv()
-
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope="playlist-modify-private",
                                             redirect_uri="http://localhost:8888/callback",
                                             client_id=os.environ.get('SPOTIFY_CLIENT_ID'),
@@ -69,7 +73,6 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope="playlist-modify-private",
                                             cache_path="token.txt"))
 
 user_id = sp.current_user()["id"]
-print(user_id)
 
 # Create a list of Spotify song URIs for the list of song names that were found from by scraping billboard 100
 song_uris = []
