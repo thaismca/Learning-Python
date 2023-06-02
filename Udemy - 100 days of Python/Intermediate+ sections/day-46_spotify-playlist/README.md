@@ -29,9 +29,22 @@ In order to ensure that all developers working on a project are using the same v
 
 After you clone this repository, you will need to:
 
+- create virtual environment
+- install dependencies from requirements.txt
 - set up your account with Spotify
 - go to the developer dashboard and create a new Spotify App
 - copy the Client ID and Client Secret into the .env file
+
+
+### Installing dependencies
+
+All the external packages used in this project, along with their versions, are listed explicitly in *requirements.txt*. At this point, you could try and run  using Python. If you have all packages  installed globally (ideally you won’t) then the script will quite possibly run successfully. However, even if this is the case you can’t be sure that the script is running in exactly the way that the repository author intended because you might be using different versions of each package to the versions specified in *requirements.txt*.
+
+To ensure that you have an identical setup to the one where this project was intended to work, we use a virtual environment.
+
+- First, create and activate a virtual environment. 
+- Next, you need to install the Python packages listed in the *requirements.txt* file. You do this using the command *pip install -r requirements.txt*
+
 
 ### Environment Variables
 
