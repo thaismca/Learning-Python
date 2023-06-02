@@ -91,4 +91,8 @@ for song in song_titles_list:
             print(f"{song} by {artists_list[song_titles_list.index(song)]} doesn't exist in Spotify. Skipped.")
 
 
-# Create a new private playlist and each of the songs to the new playlist
+# Create a new private playlist and add each of the songs to the new playlist
+playlist_name = f'Billboard Hot 100 - {date}'
+playlist_desc = f'Top songs in {date}, according to the Billboard Hot 100'
+new_playlist = sp.user_playlist_create(user=user_id, name=playlist_name, public=False, collaborative=False, description=playlist_desc)
+sp.user_playlist_add_tracks(user=user_id, playlist_id=new_playlist["id"], tracks=song_uris)
