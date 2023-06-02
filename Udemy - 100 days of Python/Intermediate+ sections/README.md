@@ -1,4 +1,4 @@
-# INTERMEDIATE PYTHON
+# INTERMEDIATE+ PYTHON
 Projects in this directory were developed to apply and practice the topics covered in the Intermediate+ section of the course:
 
 - APIs
