@@ -44,7 +44,15 @@ from bs4 import BeautifulSoup
 res = requests.get('https://www.billboard.com/charts/hot-100/' + date)
 soup = BeautifulSoup(res.text, 'html.parser')
 songs = soup.select('li h3.c-title')
-song_titles_list = [title.get_text().strip() for title in songs]
+song_titles_list = []
+artists_list = []
+for title in songs:
+    song_titles_list.append(title.get_text().strip())
+    artist = title.find_next_sibling()
+    artists_list.append(artist.get_text().strip())
+
+print(song_titles_list)
+print(artists_list)
 
 # Authenticate with Spotify using your unique Client ID/ Client Secret
 import spotipy
