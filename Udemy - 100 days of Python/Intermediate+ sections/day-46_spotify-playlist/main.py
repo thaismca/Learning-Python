@@ -45,9 +45,25 @@ res = requests.get('https://www.billboard.com/charts/hot-100/' + date)
 soup = BeautifulSoup(res.text, 'html.parser')
 songs = soup.select('li h3.c-title')
 song_titles_list = [title.get_text().strip() for title in songs]
-print(song_titles_list)
 
 # Authenticate with Spotify using your unique Client ID/ Client Secret
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+import os
+from dotenv import load_dotenv
+
+# get access to environment variables
+load_dotenv()
+
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope="playlist-modify-private",
+                                            redirect_uri="http://localhost:8888/callback",
+                                            client_id=os.environ.get('SPOTIFY_CLIENT_ID'),
+                                            client_secret=os.environ.get('SPOTIFY_CLIENT_SECRET'),
+                                            show_dialog=True,
+                                            cache_path="token.txt"))
+
+user_id = sp.current_user()["id"]
+print(user_id)
 
 # Create a list of Spotify song URIs for the list of song names that were found from by scraping billboard 100
 # Create a new private playlist and each of the songs to the new playlist
