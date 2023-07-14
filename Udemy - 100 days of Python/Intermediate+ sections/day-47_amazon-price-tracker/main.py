@@ -21,4 +21,6 @@ HEADERS = {
 
 res = requests.get(PRODUCT_URL, headers=HEADERS)
 soup = BeautifulSoup(res.text, 'lxml')
-print(soup)
+
+price = soup.find(class_="a-offscreen").get_text().split("$")[1]
+price_float = float(price)
