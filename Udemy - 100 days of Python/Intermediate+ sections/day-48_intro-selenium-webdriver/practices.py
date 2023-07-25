@@ -25,18 +25,39 @@ driver = webdriver.Chrome(service=service, options=options)
 
 
 
-# PRACTICE 2: upcoming events from python.org
+# # PRACTICE 2: upcoming events from python.org
+# # open the python.org page using the webdriver
+# driver.get('https://www.python.org/')
+# # get the list of events using css selector
+# events = driver.find_elements(by=By.CSS_SELECTOR, value='.event-widget li')
+# # loop through the list of events to create nested dictionary
+# events_dict = {}
+# for index, event in enumerate(events):
+#     time = event.find_element(by=By.TAG_NAME, value='time').get_attribute('datetime').split('T')[0]
+#     name = event.find_element(by=By.TAG_NAME, value='a').text
+#     events_dict[index] = {'time': time, 'name': name}
+# print(events_dict)
+# # quit the browser
+# # close -> closes a tab, quit -> closes all tabs and quits the browser entirely
+# driver.quit()
+
+
+
+# PRACTICE 3: interacting with wikipedia
+from selenium.webdriver.common.keys import Keys
 # open the python.org page using the webdriver
-driver.get('https://www.python.org/')
-# get the list of events using css selector
-events = driver.find_elements(by=By.CSS_SELECTOR, value='.event-widget li')
-# loop through the list of events to create nested dictionary
-events_dict = {}
-for index, event in enumerate(events):
-    time = event.find_element(by=By.TAG_NAME, value='time').get_attribute('datetime').split('T')[0]
-    name = event.find_element(by=By.TAG_NAME, value='a').text
-    events_dict[index] = {'time': time, 'name': name}
-print(events_dict)
-# quit the browser
-# close -> closes a tab, quit -> closes all tabs and quits the browser entirely
-driver.quit()
+driver.get('https://en.wikipedia.org/wiki/Main_Page')
+# find the link with the number of articles in english and print that number
+articles_number = driver.find_element(by=By.XPATH, value='//*[@id="articlecount"]/a[1]')
+print(articles_number.text)
+# find the link to the Content Portals and click it to open the page
+content_portals = driver.find_element(By.LINK_TEXT, "Content portals")
+# need to workaround an annoying popup that is being displayed before clicking the Content Portals link
+annoying_popup = driver.find_element(By.CSS_SELECTOR, ".frb-close")
+annoying_popup.click()
+content_portals.click() 
+# find the searchbar inside of the Contents Page Intro and type a subject to be searched
+search = driver.find_element(By.CSS_SELECTOR, ".contentsPage__intro input")
+search.send_keys("Ancient Egypt")
+# submit the search query
+search.send_keys(Keys.ENTER)
