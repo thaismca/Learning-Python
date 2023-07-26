@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 # setting up the selenium webdriver to work with Chrome using chromedriver
 chromedriver_path = '/Users/thaismca/Development/Chromium/chromedriver'
@@ -43,21 +44,36 @@ driver = webdriver.Chrome(service=service, options=options)
 
 
 
-# PRACTICE 3: interacting with wikipedia
-from selenium.webdriver.common.keys import Keys
-# open the python.org page using the webdriver
-driver.get('https://en.wikipedia.org/wiki/Main_Page')
-# find the link with the number of articles in english and print that number
-articles_number = driver.find_element(by=By.XPATH, value='//*[@id="articlecount"]/a[1]')
-print(articles_number.text)
-# find the link to the Content Portals and click it to open the page
-content_portals = driver.find_element(By.LINK_TEXT, "Content portals")
-# need to workaround an annoying popup that is being displayed before clicking the Content Portals link
-annoying_popup = driver.find_element(By.CSS_SELECTOR, ".frb-close")
-annoying_popup.click()
-content_portals.click() 
-# find the searchbar inside of the Contents Page Intro and type a subject to be searched
-search = driver.find_element(By.CSS_SELECTOR, ".contentsPage__intro input")
-search.send_keys("Ancient Egypt")
-# submit the search query
-search.send_keys(Keys.ENTER)
+# # PRACTICE 3: interacting with wikipedia
+# # open the python.org page using the webdriver
+# driver.get('https://en.wikipedia.org/wiki/Main_Page')
+# # find the link with the number of articles in english and print that number
+# articles_number = driver.find_element(by=By.XPATH, value='//*[@id="articlecount"]/a[1]')
+# print(articles_number.text)
+# # find the link to the Content Portals and click it to open the page
+# content_portals = driver.find_element(By.LINK_TEXT, "Content portals")
+# # need to workaround an annoying popup that is being displayed before clicking the Content Portals link
+# annoying_popup = driver.find_element(By.CSS_SELECTOR, ".frb-close")
+# annoying_popup.click()
+# content_portals.click() 
+# # find the searchbar inside of the Contents Page Intro and type a subject to be searched
+# search = driver.find_element(By.CSS_SELECTOR, ".contentsPage__intro input")
+# search.send_keys("Ancient Egypt")
+# # submit the search query
+# search.send_keys(Keys.ENTER)
+
+
+
+# PRACTICE 4: interacting with forms
+# open the App Brewery form page example using the webdriver
+driver.get('https://secure-retreat-92358.herokuapp.com/')
+# find each of the inputs in the form and fill them with some testing data
+# first name
+first_name = driver.find_element(By.NAME, "fName")
+first_name.send_keys("Tony")
+# last name -> find inout and send keys all in one line
+driver.find_element(By.NAME, "lName").send_keys("Stark")
+# email
+driver.find_element(By.NAME, "email").send_keys("iamironman@avengers.com")
+# find the submit button and click it
+driver.find_element(By.CSS_SELECTOR, "form button").click()
