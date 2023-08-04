@@ -33,8 +33,20 @@ class InternetSpeedTwitterBot:
 
 
     def tweet_at_provider(self):
-        pass
+        self.driver.get('http://www.twitter.com')
+        time.sleep(2)
+        self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div[1]/div/div/div[3]/div[5]/a').click()
+        time.sleep(2)
+        self.driver.find_element(By.TAG_NAME, 'input').send_keys(os.environ.get('TWITTER_USER') + Keys.ENTER)
+        time.sleep(2)
+        self.driver.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input').send_keys(os.environ.get('TWITTER_PASSWORD') + Keys.ENTER)
+        time.sleep(2)
+        
+        tweet = 'Testing my bot'
+        self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div[2]/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/label/div[1]/div/div/div/div/div/div[2]/div/div/div/div').send_keys(tweet)
+        self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div[2]/div[1]/div/div/div/div[2]/div[2]/div[2]/div/div/div[2]/div[3]/div').click()
 
 bot = InternetSpeedTwitterBot(os.environ.get('CHROMEDRIVER_PATH'))
-bot.get_internet_speed()
-print(f'Up: {bot.up} | Down: {bot.down}')
+# bot.get_internet_speed()
+# print(f'Up: {bot.up} | Down: {bot.down}')
+bot.tweet_at_provider()
