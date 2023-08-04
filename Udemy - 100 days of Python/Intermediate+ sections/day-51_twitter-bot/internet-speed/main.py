@@ -21,8 +21,8 @@ class InternetSpeedTwitterBot:
         self.up = 0
         self.down = 0
 
-
     def get_internet_speed(self):
+        self.driver.maximize_window()
         self.driver.get('http://www.speedtest.net')
         time.sleep(5)
         self.driver.find_element(By.CSS_SELECTOR, '.start-button a').click()
@@ -33,6 +33,7 @@ class InternetSpeedTwitterBot:
 
 
     def tweet_at_provider(self):
+        self.driver.maximize_window()
         self.driver.get('http://www.twitter.com')
         time.sleep(2)
         self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div[1]/div/div/div[3]/div[5]/a').click()
