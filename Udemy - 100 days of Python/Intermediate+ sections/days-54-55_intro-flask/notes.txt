@@ -1,0 +1,37 @@
+WSGI: stands for "Web Server Gateway Interface".
+It's used to forward requests from a web server (such as Apache or NGINX) to a backend Python web application or framework.
+From there, responses are then passed back to the webserver to reply to the requestor.
+
+- Requests are sent from the client's browser to the server.
+- WSGI forwards the request to the webserver python app.
+- The webserver python app returns the response for the request back to the server and onto the browser.
+
+Most Python frameworks include a basic development server that can be used while building a web application.
+When the app is ready to go live from a staging to production environment, most deployments will use WSGI.
+
+There are two basic components of WSGI: server-side and web application (or framework).
+The server-side element is going to invoke a callable object that is usually defined by a route.
+Once invoked, the web application or framework contains the structure and the code that is to be executed.
+In frameworks such as Flask, routes are defined with a decorator.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+In Python, a function is a first-class object, which means it is an instance of the Object type.
+In short, it means there are no restrictions on the object's use. It's the same as any other object.
+
+You can store the function in a variable.
+This assignment doesn’t call the function.
+It takes the function object referenced by shout and creates a second name pointing to it.
+You can also store them in data structures such as hash tables, lists, etc.
+
+You can pass the function as a parameter to another function.
+Functions that can accept other functions as arguments are also called higher-order functions.
+
+You can return the function from a function.
+A Python function can have nested functions, which are functions defined inside another function.
+In Python, this kind of function has direct access to variables and names defined in the enclosing function.
+Inner functions have many uses, most notably as closure factories and decorator functions.
+
+
+
+
