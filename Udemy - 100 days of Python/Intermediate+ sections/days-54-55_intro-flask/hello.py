@@ -19,4 +19,4 @@ def hello_world():
 # A module's __name__ is set equal to __main__ when read from standard input, a script or from an interactive prompt.
 if __name__ == "__main__":
     # run the app only if this is the current file where the app code is located, and not if it's an imported module
-    app.run()
+    app.run(debug=True)
